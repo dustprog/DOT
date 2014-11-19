@@ -1,7 +1,5 @@
-DOT
-===
-
-The open source version of the DOT AI Engine.
+## DOT
+### The open source version of the DOT AI Engine.
 
 If you have any questions on how to use DOT, or its editor, feel free to contact the studio at projectferomine@gmail.com
 
@@ -13,11 +11,12 @@ In order to compile DOT, you need the newest version of Qt (As of November 2014)
 Both 32 and 64 bit versions are required. A minimum of Visual Studio 2013 is also required for compilation.
 
 Also required:
-	-OpenGL
-	-JRE (Oddly... Never could figure out why)
--UPDATE YOUR VIDEO DRIVERS!!!! It has a nasty habbit of crashing on older NVIDIA drivers.
+* OpenGL
+* JRE (Oddly... Never could figure out why)
 
--If you are experiencing difficulty on an AMD CPU, particularly the bulldog series, please contact me. We can't solve this bug yet :(
+**UPDATE YOUR VIDEO DRIVERS!!!! It has a nasty habbit of crashing on older NVIDIA drivers.**
+
+_If you are experiencing difficulty on an AMD CPU, particularly the bulldog series, please contact me. We can't solve this bug yet :(_
 
 
 Later versions of DOT will require Visual Studio 2013 Profesional or better, as well as a full
@@ -31,5 +30,4 @@ If you wish to use DOT in a commercial (INDIE!!!) product, please contact me bef
 
 If you wish to use DOT in a commercial non-indie product, please contact me and we will schedule a meeting.
 
-If you wish to utilize the newest version of DOT (The open source version will always be a minimum of 10 versions behind
-our inhouse edition), please contact me to discuss licensing.
+If you wish to utilize the newest version of DOT (The open source version will always be a minimum of 10 versions behind our inhouse edition), please contact me to discuss licensing.
