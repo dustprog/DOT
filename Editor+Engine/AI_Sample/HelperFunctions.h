@@ -124,7 +124,7 @@ public:
         {
 
         }
-    };
+    }
 };
 struct GroupManager
 {
@@ -139,7 +139,7 @@ struct GroupManager
             temp = (Group*)temp->Nodes[Adr.at(i)];
         }
         return temp;
-    };
+    }
     //For chain retreival only
     std::vector<Group*> *ReturnChain(std::vector<short> Adr)
     {

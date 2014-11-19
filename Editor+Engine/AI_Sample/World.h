@@ -70,9 +70,7 @@ public:
     void AddSimulationAdvertisement()
     {
         SimulationAds->push_back(std::shared_ptr<Advertisement>(new Advertisement));
-    };
-
-
+    }
 
     bool Update_No_LOD(int rad) //Updates all entities. Has no level of detail management (Our back propogation engine)
     {
@@ -108,65 +106,65 @@ public:
     Entity *ReturnEntity(std::string Name) //ONLY TO BE USED IN THE EDITOR!!
     {
         for (int i = 0; i < (int)Entities->size(); i++)
-        if (Name == Entities->at(i).get()->Name)
-            return Entities->at(i).get();
+            if (Name == Entities->at(i).get()->Name)
+                return Entities->at(i).get();
         return nullptr;
-    };
+    }
     int EntityIndex(std::string Name) //ONLY TO BE USED IN THE EDITOR!!
     {
         for (int i = 0; i < (int)Entities->size(); i++)
-        if (Name == Entities->at(i).get()->Name)
-            return i;
+            if (Name == Entities->at(i).get()->Name)
+                return i;
         return -1;
-    };
+    }
     Entity *ReturnSimulationalEntity(std::string Name) //ONLY TO BE USED IN THE EDITOR!!
     {
         for (int i = 0; i < (int)SimulationEntities->size(); i++)
-        if (Name == SimulationEntities->at(i).get()->Name)
-            return SimulationEntities->at(i).get();
+            if (Name == SimulationEntities->at(i).get()->Name)
+                return SimulationEntities->at(i).get();
         return nullptr;
-    };
+    }
     int SimulationalEntityIndex(std::string Name) //ONLY TO BE USED IN THE EDITOR!!
     {
         for (int i = 0; i < (int)SimulationEntities->size(); i++)
-        if (Name == SimulationEntities->at(i).get()->Name)
-            return i;
+            if (Name == SimulationEntities->at(i).get()->Name)
+                return i;
         return -1;
-    };
+    }
     Advertisement *ReturnAdvertisement(std::string Name) //ONLY TO BE USED IN THE EDITOR!!
     {
         for (int i = 0; i < (int)Ads->size(); i++)
-        if (Name == Ads->at(i).get()->Name)
-            return Ads->at(i).get();
+            if (Name == Ads->at(i).get()->Name)
+                return Ads->at(i).get();
         return nullptr;
-    };
+    }
     int AdIndex(std::string Name) //ONLY TO BE USED IN THE EDITOR!!
     {
         for (int i = 0; i < (int)Ads->size(); i++)
-        if (Name == Ads->at(i).get()->Name)
-            return i;
+            if (Name == Ads->at(i).get()->Name)
+                return i;
         return -1;
-    };
+    }
     Advertisement *ReturnSimulationalAdvertisement(std::string Name) //ONLY TO BE USED IN THE EDITOR!!
     {
         for (int i = 0; i < (int)SimulationAds->size(); i++)
-        if (Name == SimulationAds->at(i).get()->Name)
-            return SimulationAds->at(i).get();
+            if (Name == SimulationAds->at(i).get()->Name)
+                return SimulationAds->at(i).get();
         return nullptr;
-    };
+    }
     int SimulationAdIndex(std::string Name) //ONLY TO BE USED IN THE EDITOR!!
     {
         for (int i = 0; i < (int)SimulationAds->size(); i++)
-        if (Name == SimulationAds->at(i).get()->Name)
-            return i;
+            if (Name == SimulationAds->at(i).get()->Name)
+                return i;
         return -1;
-    };
+    }
 
     int AttributeIndex(std::string Name)
     {
         for (int i = 0; i < (int)this->Attributes->size(); i++)
-        if (Name == Attributes->at(i).Name)
-            return i;
+            if (Name == Attributes->at(i).Name)
+                return i;
         return -1;
     }
     bool AttributeExist(std::string Name)
@@ -224,7 +222,6 @@ public:
     }
     void Build()
     {
-
         BuildAdvertisementLinks();
         for (int i = 0; i < (int)Entities->size(); i++) //For every entity
         {

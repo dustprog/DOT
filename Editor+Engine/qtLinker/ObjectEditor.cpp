@@ -76,8 +76,8 @@ void ObjectEditor::GradShow(Gradient *in)
 };
 void ObjectEditor::CostShow(Cost *in)
 {
-    newTB("Type", (void*)&in->StringT, Link::STRING);
-    newTB("Value", (void*)new std::string(std::to_string(in->DiminishingReturn)), Link::INT);
+    newTB("Type", in->StringT.c_str(), Link::STRING);
+    newTB("Value", QString::number(in->DiminishingReturn), Link::INT);
     m_button = new QPushButton("Update");
     vLayout->addWidget(m_button, 0, Qt::AlignBottom);
     connect(m_button, SIGNAL(clicked()), this, SLOT(OnButton()));
@@ -88,9 +88,9 @@ void ObjectEditor::CostShow(Cost *in)
 };
 void ObjectEditor::AttributeShow(EntityAttribute *in)
 {
-    newTB("Type", (void*)&in->Name, Link::STRING);
-    newTB("Value", (void*)new std::string(std::to_string(in->Value)), Link::INT);
-    newTB("Delta", (void*)new std::string(std::to_string(in->Delta)), Link::INT);
+    newTB("Type", in->Name.c_str(), Link::STRING);
+    newTB("Value", QString::number(in->Value), Link::INT);
+    newTB("Delta", QString::number(in->Delta), Link::INT);
     tree = new TreeWindowEntity(in, this);
     view = new QTreeView(this);
     view->setModel(tree);
@@ -112,11 +112,11 @@ void ObjectEditor::AdvertisementShow(Advertisement *in)
 {
     clearLayout(vLayout);
     Clear();
-    newTB("Time Constant", (void*)new std::string(std::to_string(in->TimeConstant)), Link::INT);
-    newTB("Poly-Usability", (void*)new std::string(std::to_string(in->UsableByMoreThanOne)), Link::BOOL);
+    newTB("Time Constant", QString::number(in->TimeConstant), Link::INT);
+    newTB("Poly-Usability", QString::number(in->UsableByMoreThanOne), Link::BOOL);
     Advertisement temp = *in;
     if (temp.OwnerSet == true)
-        newTB("Owner", (void*)&in->GetOwner()->Name, Link::STRING);
+        newTB("Owner", in->GetOwner()->Name.c_str(), Link::STRING);
     else
         newTB("Owner", QString::fromStdString("NULL"), Link::STRING);
 
