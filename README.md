@@ -1,12 +1,15 @@
-## DOT
-### The open source version of the DOT AI Engine.
+# DOT
+## The open source version of the DOT AI Engine.
 
 If you have any questions on how to use DOT, or its editor, feel free to contact the studio at projectferomine@gmail.com
 
 If you wish to join WireZapp, feel free to contact me as well :D
 
-The EXE is located under Editor+Engine/Debug/DOT_Editor
+The Windows EXE is located under Editor+Engine/Debug/DOT_Editor
 
+## Building the project
+
+### Windows
 In order to compile DOT, you need the newest version of Qt (As of November 2014) [5.3.2] for Windows.
 Both 32 and 64 bit versions are required. A minimum of Visual Studio 2013 is also required for compilation.
 
@@ -18,16 +21,26 @@ Also required:
 
 _If you are experiencing difficulty on an AMD CPU, particularly the bulldog series, please contact me. We can't solve this bug yet :(_
 
-
 Later versions of DOT will require Visual Studio 2013 Profesional or better, as well as a full
 directX 11 installation.
 
-We will not be releasing source code on Linux and Mac OSX versions of DOT. If you want access to these
-versions, please contact us at the email provided above.
+### Linux
+In order to compile DOT, you will need a Qt version >= 5.3.1 ( earlier 5.x releases might work too ) and cmake, plus either relatively recent gcc/clang compiler.
+The build process after acquiring/installing those dependencies should be straightforward:
 
-If you wish to use DOT in a commercial (INDIE!!!) product, please contact me before integrating DOT into your product
-(We want to make sure that its integrated well into most if not all solutions).
+```bash
+    cd <cloned_repository_dir>
+    mkdir build_dir
+    cd build_dir
+    cmake ..
+    make
+```
 
-If you wish to use DOT in a commercial non-indie product, please contact me and we will schedule a meeting.
+### Notes
+* We will not be releasing source code on Linux and Mac OSX versions of DOT. If you want access to these versions, please contact us at the email provided above.
 
-If you wish to utilize the newest version of DOT (The open source version will always be a minimum of 10 versions behind our inhouse edition), please contact me to discuss licensing.
+* If you wish to use DOT in a commercial (INDIE!!!) product, please contact me before integrating DOT into your product (We want to make sure that its integrated well into most if not all solutions).
+
+* If you wish to use DOT in a commercial non-indie product, please contact me and we will schedule a meeting.
+
+* If you wish to utilize the newest version of DOT (The open source version will always be a minimum of 10 versions behind our inhouse edition), please contact me to discuss licensing.
