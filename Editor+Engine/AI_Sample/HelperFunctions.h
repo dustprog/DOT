@@ -160,7 +160,6 @@ struct GroupManager
             if (Chain->at(i)->MaxAdr < GlobalAdr && Chain->at(i)->MinAdr > GlobalAdr)
                 return Chain->at(i)->LTL[GlobalAdr - Chain->at(i)->MinAdr];
         }
-
     }
     //For single advertisement retreival only
     int ReturnLocalAdViability(int AdAdr, std::vector<short> EntityAdr)
@@ -191,7 +190,7 @@ struct GroupManager
             }
         }
         return LocalAdr;
-    };
+    }
     //Returns all local addresses for the entity specified. Returns a highly expanded vector. Needed for GPGPU
     std::vector<int> ReturnAttributeChain(std::vector<short> EntityAdr)
     {
@@ -274,7 +273,7 @@ public:
     {
         this->MyOwner.e = e;
         OwnerSet = true;
-    };
+    }
     Entity *GetOwner() //Use this with "World"
     {
         if (OwnerSet)
@@ -292,7 +291,7 @@ public:
     bool IsInUse()
     {
         return this->MyOwner.InUse;
-    };
+    }
     Advertisement createCopy()
     {
         Advertisement ToReturn;
@@ -345,25 +344,6 @@ public:
     std::vector<Cost> positive_effects; //What good does this do for us?
     Advertisement *Infer;
 };
-static int binarySearch(std::vector<float> arr, int value, int min, int max){
-    int pos = -1;
-
-    while (max >= min && pos == -1) {
-        int mid = min + (max - min) / 2;
-
-        if (arr[mid]== value){
-            pos = mid;
-        }
-        else if (arr[mid] < value){
-            min = mid + 1;
-        }
-        else if (arr[mid] > value){
-            max = mid - 1;
-        }
-
-    }
-    return pos;
-};
 struct Monitization //Contains a set of helper functions for assisting the entity to figure out what helps it the most in its current eco state
 {
     /*
@@ -372,7 +352,7 @@ struct Monitization //Contains a set of helper functions for assisting the entit
     static float Attune(float input) //Is an increase from 30% to 60% worth just as much as an increase from 60% to 90%?
     {
         return 10 / input;
-    };
+    }
     static float TimeAspect(float inputscore, int Delta, int EntityValue) //How much time is this process going to take? Are we going to die completing it?
     {
         inputscore *= Delta; //How much food do we need during this time?

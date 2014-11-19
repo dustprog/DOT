@@ -20,6 +20,7 @@ namespace Zeta
             {
                 temp.Set(Return[i] + (Unitary[i] + this[i]), i);
             }
+            return temp;
         }
         DOUBLE_ARRAY Matrix_Add(DOUBLE_ARRAY *Return, DOUBLE_ARRAY *Unitary)
         {
@@ -28,6 +29,7 @@ namespace Zeta
             {
                 temp.Set(Return[i] + (Unitary[i] + this[i]), i);
             }
+            return temp;
         }
         DOUBLE_ARRAY operator+(DOUBLE_ARRAY lhs)
         {
@@ -240,11 +242,10 @@ namespace Zeta
             for(int i = 0; i < s; i++){sum += Return(i);};
             return sum / s;
         }
-        int ReturnSize()
-        {return s;};
+        int ReturnSize() const {return s;}
         double Distance(DOUBLE_ARRAY other)
         {
-            double sum;
+            double sum = 0.0;
             for(int i = 0; i < s; i++)
             {
                 sum += pow(Return(i) - other.Return(i),2);
@@ -261,7 +262,7 @@ namespace Zeta
             return (temp / itteration);
         }
 
-        double *ToDoubleArray() { return &c[0];};
+        double *ToDoubleArray() { return &c[0];}
 
         int SizeOf()
         {
@@ -369,9 +370,9 @@ namespace Zeta
         }
 
         operator float*()
-        { return &c[0]; };
+        { return &c[0]; }
         operator float()
-        {return ReturnGreyScale();};
+        {return ReturnGreyScale();}
 
         FLOAT_ARRAY(int size)
         {
@@ -482,14 +483,15 @@ namespace Zeta
             Set_R(r);
             Set_G(g);
             Set_B(b);
-        };
-        COLOR3 operator=( DOUBLE_ARRAY lhs)
+        }
+        COLOR3 &operator=( DOUBLE_ARRAY lhs)
         {
             SetdoubleBuffer((double*)lhs, sizeof(lhs) / sizeof(lhs[0]));
+            return *this;
         }
-        double Get_R(){return Return(0);};
-        double Get_G(){return Return(1);};
-        double Get_B(){return Return(2);};
+        double Get_R(){return Return(0);}
+        double Get_G(){return Return(1);}
+        double Get_B(){return Return(2);}
 
         void Set_R(double Value){Set(Value, 0);}
         void Set_G(double Value){Set(Value, 1);}
@@ -538,16 +540,16 @@ namespace Zeta
         VECTOR2DF(float* arr)
             : FLOAT_ARRAY(arr, sizeof(arr) / sizeof(arr[0]))
         {
-        };
+        }
         VECTOR2DF(FLOAT_ARRAY f)
             : FLOAT_ARRAY(f.ToFloatArray(), f.ReturnSize())
         {
-        };
+        }
         VECTOR2DF()
             : FLOAT_ARRAY(2)
-        {};
-        const float Get_X(){ return Return(0); };
-        const float Get_Y(){ return Return(1); };
+        {}
+        const float Get_X(){ return Return(0); }
+        const float Get_Y(){ return Return(1); }
 
         void Set_X(float Value){ Set(Value, 0); }
         void Set_Y(float Value){ Set(Value, 1); }

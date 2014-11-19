@@ -411,7 +411,9 @@ void Interop::handleButton2()
         HasDebugged = true;
     }
     else
-        QMessageBox(QMessageBox::NoIcon, "Error!", "Be sure to add entities to the simulation list from the visual editor!", QMessageBox::StandardButton::Ok, this).exec();
+        QMessageBox::critical(this, "Error!",
+                    "Be sure to add entities to the simulation list from the visual editor!",
+                    QMessageBox::StandardButton::Ok);
     handle.ptr = scene;
     handle = XMLHandler(DocumentsFolder + "/DOT/temp_noupdate.xml", world, scene, false);
 }
@@ -514,7 +516,7 @@ deletearr:
         delete out;
         return false;
     }
-};
+}
 
 void Interop::plotPressEvent(QMouseEvent *event, int *widget)
 {
