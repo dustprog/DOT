@@ -4,7 +4,7 @@
 
 TEMPLATE = app
 TARGET = qtLinker
-DESTDIR = ../Win32/Debug
+DESTDIR = ../linux/Debug
 QT += core widgets gui
 CONFIG += debug
 DEFINES += WIN64 QT_DLL QT_WIDGETS_LIB
