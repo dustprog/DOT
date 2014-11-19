@@ -7,7 +7,7 @@
 #include "GradEditor.h"
 #include "TreeWidget.h"
 ObjectEditor::ObjectEditor(World *wo, QWidget *parent) :
-QWidget(parent)
+    QWidget(parent)
 {
     resize(1280, 960);
     p = parent;
@@ -23,7 +23,7 @@ QWidget(parent)
     MasterChild = false;
 }
 ObjectEditor::ObjectEditor(QWidget *parent) :
-QWidget(parent)
+    QWidget(parent)
 {
     MasterChild = false;
     Activated = false;
@@ -47,7 +47,7 @@ void clearLayout(QLayout *layout)
 #endif
 ObjectEditor::~ObjectEditor()
 {
-//	_sleep(10);
+    //	_sleep(10);
 };
 void ObjectEditor::EntityShow(Entity *in)
 {
@@ -58,9 +58,9 @@ void ObjectEditor::EntityShow(Entity *in)
     view = new QTreeView(this);
     e = in;
     connect(view,
-        SIGNAL(clicked(const QModelIndex&)),
-        this,
-        SLOT(OnClick(const QModelIndex&)));
+            SIGNAL(clicked(const QModelIndex&)),
+            this,
+            SLOT(OnClick(const QModelIndex&)));
     view->setModel(tree);
     vLayout->addWidget(view, 0, Qt::AlignHCenter);
     view->show();
@@ -100,9 +100,9 @@ void ObjectEditor::AttributeShow(EntityAttribute *in)
     vLayout->addWidget(m_button, 0, Qt::AlignBottom);
 
     connect(view,
-        SIGNAL(clicked(const QModelIndex&)),
-        this,
-        SLOT(OnClick(const QModelIndex&)));
+            SIGNAL(clicked(const QModelIndex&)),
+            this,
+            SLOT(OnClick(const QModelIndex&)));
     connect(m_button, SIGNAL(clicked()), this, SLOT(OnButton()));
     update();
     this->ea = in;
@@ -126,9 +126,9 @@ void ObjectEditor::AdvertisementShow(Advertisement *in)
     vLayout->addWidget(view, 0, Qt::AlignHCenter);
 
     connect(view,
-        SIGNAL(clicked(const QModelIndex&)),
-        this,
-        SLOT(OnClick(const QModelIndex&)));
+            SIGNAL(clicked(const QModelIndex&)),
+            this,
+            SLOT(OnClick(const QModelIndex&)));
     view->show();
 
     m_button = new QPushButton("Update");
@@ -175,6 +175,160 @@ void ObjectEditor::OnButton()
         break;
     }
 }
+
+void ObjectEditor::processCtrlC(TreeItem *item)
+{
+    Advertisement *at;
+    switch (item->type)
+    {
+    case TreeType::ADVERTISEMENT:
+        *LinkACopy = *static_cast<Advertisement*>(item->Link);
+        LinkECopy = std::shared_ptr<Entity>(new Entity);
+        LinkEACopy = std::shared_ptr<EntityAttribute>(new EntityAttribute);
+        LinkCoCopy = std::shared_ptr<Cost>(new Cost);
+        break;
+    case TreeType::ENTITY:
+        *LinkECopy = *worldptr->ReturnEntityShared(static_cast<Entity*>(item->Link)->Name);
+
+        LinkACopy = std::shared_ptr<Advertisement>(new Advertisement);
+        LinkEACopy = std::shared_ptr<EntityAttribute>(new EntityAttribute);
+        LinkCoCopy = std::shared_ptr<Cost>(new Cost);
+        break;
+    case TreeType::ATTRIBUTE:
+        *LinkEACopy = *static_cast<EntityAttribute*>(item->Link);
+
+        LinkACopy = std::shared_ptr<Advertisement>(new Advertisement);
+        LinkECopy = std::shared_ptr<Entity>(new Entity);
+        LinkCoCopy = std::shared_ptr<Cost>(new Cost);
+        break;
+    case TreeType::COST:
+        *LinkCoCopy = *static_cast<Cost*>(item->Link);
+
+        LinkACopy = std::shared_ptr<Advertisement>(new Advertisement);
+        LinkECopy = std::shared_ptr<Entity>(new Entity);
+        LinkEACopy = std::shared_ptr<EntityAttribute>(new EntityAttribute);
+        break;
+    default:
+        break;
+    }
+}
+
+void ObjectEditor::processCtrlV(TreeItem *item, const QModelIndex& q)
+{
+    switch (item->type)
+    {
+    case TreeType::ADVERTISEMENTADD:
+        if (LinkACopy != nullptr)
+        {
+            this->indexof = q;
+            wid->ihw = new InheritanceWidget(new QLineEdit("Name: "));
+            connect(wid->ihw->button, SIGNAL(pressed()), SLOT(CreateNew()));
+            wid->ihw->show();
+            typealloc = 0;
+            wid->WhileSync = true;
+        }
+        break;
+    case TreeType::ENTITYADD:
+        if (LinkECopy->Name != "") //We actually have a value for LinkE
+        {
+            this->indexof = q;
+            wid->ihw = new InheritanceWidget(new QLineEdit("Name: "));
+            connect(wid->ihw->button, SIGNAL(pressed()), SLOT(CreateNew()));
+            wid->ihw->show();
+            typealloc = 1;
+            wid->WhileSync = true;
+        }
+        break;
+    case TreeType::ATTRIBUTEADD:
+        if (LinkEACopy != nullptr) //We actually have a value for LinkE
+        {
+            this->indexof = q;
+            wid->ihw = new InheritanceWidget(new QLineEdit("Name: "));
+            connect(wid->ihw->button, SIGNAL(pressed()), SLOT(CreateNew()));
+            wid->ihw->show();
+            typealloc = 2;
+            wid->WhileSync = true;
+        }
+        break;
+    case TreeType::COSTADD:
+        if (this->LinkCoCopy != nullptr) //We actually have a value for LinkE
+        {
+            this->indexof = q;
+            wid->ihw = new InheritanceWidget(new QLineEdit("Name: "));
+            connect(wid->ihw->button, SIGNAL(pressed()), SLOT(CreateNew()));
+            wid->ihw->show();
+            typealloc = 3;
+            wid->WhileSync = true;
+        }
+        break;
+    default:
+        break;
+    }
+}
+
+void ObjectEditor::processCtrlX(TreeItem *item, const QModelIndex& q)
+{
+    std::string Link;
+    int index;
+    bool check = true;
+    switch (item->type)
+    {
+    case TreeType::ADVERTISEMENT:
+        Link = item->data(q.column()).toString().toStdString();
+        if (ad != nullptr)
+        {
+            if (ad->Infer != nullptr)
+            {
+                if (ad->Infer->Name == Link)
+                {
+                    ad->Infer = nullptr;
+                    check = false;
+                }
+            }
+        }
+
+        if (check)
+            if (worldptr->DeleteEntityAdvertisement(Link, e) == 0) //Wasn't found
+            {
+                //report error
+            }
+        tree->removeRow(q.row(), q.parent());
+        break;
+    case TreeType::COST:
+        Link = item->data(q.column()).toString().toStdString();
+        for (int i = 0; i < ad->positive_effects.size(); i++)
+        {
+            if (ad->positive_effects.at(i).StringT == Link)
+            {
+                ad->positive_effects.erase(ad->positive_effects.begin() + i);
+                check = false;
+                break;
+            }
+        }
+        if (check)
+        {
+            for (int i = 0; i < ad->negative_effects.size(); i++)
+            {
+                if (ad->negative_effects.at(i).StringT == Link)
+                {
+                    ad->negative_effects.erase(ad->negative_effects.begin() + i);
+                    break;
+                }
+            }
+        }
+        tree->removeRow(q.row(), q.parent());
+        break;
+    case TreeType::ATTRIBUTE:
+        e->DeleteAttribute(item->data(q.column()).toString().toStdString());
+        if (!worldptr->AttributeExist(item->data(q.column()).toString().toStdString()))
+            worldptr->Attributes->erase(worldptr->Attributes->begin() + worldptr->AttributeIndex(item->data(q.column()).toString().toStdString()));
+        tree->removeRow(q.row(), q.parent());
+        break;
+    default:
+        break;
+    }
+}
+
 void ObjectEditor::OnClick(const QModelIndex& q)
 {
     TreeItem *item = tree->getItem(q);
@@ -263,190 +417,53 @@ void ObjectEditor::OnClick(const QModelIndex& q)
     {
         if (CDown)
         {
-            Advertisement *at;
-            switch (item->type)
-            {
-            case TreeType::ADVERTISEMENT:
-                *LinkACopy = *static_cast<Advertisement*>(item->Link);
-                LinkECopy = std::shared_ptr<Entity>(new Entity);
-                LinkEACopy = std::shared_ptr<EntityAttribute>(new EntityAttribute);
-                LinkCoCopy = std::shared_ptr<Cost>(new Cost);
-                break;
-            case TreeType::ENTITY:
-                *LinkECopy = *worldptr->ReturnEntityShared(static_cast<Entity*>(item->Link)->Name);
-
-                LinkACopy = std::shared_ptr<Advertisement>(new Advertisement);
-                LinkEACopy = std::shared_ptr<EntityAttribute>(new EntityAttribute);
-                LinkCoCopy = std::shared_ptr<Cost>(new Cost);
-                break;
-            case TreeType::ATTRIBUTE:
-                *LinkEACopy = *static_cast<EntityAttribute*>(item->Link);
-
-                LinkACopy = std::shared_ptr<Advertisement>(new Advertisement);
-                LinkECopy = std::shared_ptr<Entity>(new Entity);
-                LinkCoCopy = std::shared_ptr<Cost>(new Cost);
-                break;
-            case TreeType::COST:
-                *LinkCoCopy = *static_cast<Cost*>(item->Link);
-
-                LinkACopy = std::shared_ptr<Advertisement>(new Advertisement);
-                LinkECopy = std::shared_ptr<Entity>(new Entity);
-                LinkEACopy = std::shared_ptr<EntityAttribute>(new EntityAttribute);
-                break;
-            default:
-                break;
-            }
+            processCtrlC(item);
         }
         else if (VDown)
         {
-            switch (item->type)
-            {
-            case TreeType::ADVERTISEMENTADD:
-                if (LinkACopy != nullptr)
-                {
-                    this->indexof = q;
-                    wid->ihw = new InheritanceWidget(new QLineEdit("Name: "));
-                    connect(wid->ihw->button, SIGNAL(pressed()), SLOT(CreateNew()));
-                    wid->ihw->show();
-                    typealloc = 0;
-                    wid->WhileSync = true;
-                }
-                break;
-            case TreeType::ENTITYADD:
-                if (LinkECopy->Name != "") //We actually have a value for LinkE
-                {
-                    this->indexof = q;
-                    wid->ihw = new InheritanceWidget(new QLineEdit("Name: "));
-                    connect(wid->ihw->button, SIGNAL(pressed()), SLOT(CreateNew()));
-                    wid->ihw->show();
-                    typealloc = 1;
-                    wid->WhileSync = true;
-                }
-                break;
-            case TreeType::ATTRIBUTEADD:
-                if (LinkEACopy != nullptr) //We actually have a value for LinkE
-                {
-                    this->indexof = q;
-                    wid->ihw = new InheritanceWidget(new QLineEdit("Name: "));
-                    connect(wid->ihw->button, SIGNAL(pressed()), SLOT(CreateNew()));
-                    wid->ihw->show();
-                    typealloc = 2;
-                    wid->WhileSync = true;
-                }
-                break;
-            case TreeType::COSTADD:
-                if (this->LinkCoCopy != nullptr) //We actually have a value for LinkE
-                {
-                    this->indexof = q;
-                    wid->ihw = new InheritanceWidget(new QLineEdit("Name: "));
-                    connect(wid->ihw->button, SIGNAL(pressed()), SLOT(CreateNew()));
-                    wid->ihw->show();
-                    typealloc = 3;
-                    wid->WhileSync = true;
-                }
-                break;
-            default:
-                break;
-            }
+            processCtrlV(item, q);
         }
         else if (XDown)
         {
-            std::string Link;
-            int index;
-            bool check = true;
-            switch (item->type)
-            {
-            case TreeType::ADVERTISEMENT:
-                Link = item->data(q.column()).toString().toStdString();
-                if (ad != nullptr)
-                {
-                    if (ad->Infer != nullptr)
-                    {
-                        if (ad->Infer->Name == Link)
-                        {
-                            ad->Infer = nullptr;
-                            check = false;
-                        }
-                    }
-                }
-
-            if (check)
-            if (worldptr->DeleteEntityAdvertisement(Link, e) == 0) //Wasn't found
-            {
-                //report error
-            }
-            tree->removeRow(q.row(), q.parent());
-            break;
-        case TreeType::COST:
-            Link = item->data(q.column()).toString().toStdString();
-            for (int i = 0; i < ad->positive_effects.size(); i++)
-            {
-                if (ad->positive_effects.at(i).StringT == Link)
-                {
-                    ad->positive_effects.erase(ad->positive_effects.begin() + i);
-                    check = false;
-                    break;
-                }
-            }
-            if (check)
-            {
-                for (int i = 0; i < ad->negative_effects.size(); i++)
-                {
-                    if (ad->negative_effects.at(i).StringT == Link)
-                    {
-                        ad->negative_effects.erase(ad->negative_effects.begin() + i);
-                        break;
-                    }
-                }
-            }
-            tree->removeRow(q.row(), q.parent());
-            break;
-        case TreeType::ATTRIBUTE:
-            e->DeleteAttribute(item->data(q.column()).toString().toStdString());
-            if (!worldptr->AttributeExist(item->data(q.column()).toString().toStdString()))
-                worldptr->Attributes->erase(worldptr->Attributes->begin() + worldptr->AttributeIndex(item->data(q.column()).toString().toStdString()));
-            tree->removeRow(q.row(), q.parent());
-            break;
-        default:
-            break;
+            processCtrlX(item, q);
         }
     }
 }
-}
 void ObjectEditor::paintEvent(QPaintEvent * event)
 {
-    if (p)
-    if ((f % 1 == 0) && (w != p->width() || h != p->height()))
-    {
-        float h2 = p->height();
-        float w2 = p->width();
-
-        h2 /= h;
-        w2 /= w;
-        if (h2 == 1 && w2 == 1)
+    if (p) {
+        if ((f % 1 == 0) && (w != p->width() || h != p->height()))
         {
-        }
-        else{
-            if (h2 != 0 && w2 != 0)
+            float h2 = p->height();
+            float w2 = p->width();
+
+            h2 /= h;
+            w2 /= w;
+            if (h2 == 1 && w2 == 1)
             {
-                //scroll->setFixedSize(scroll->width() * w2, scroll->height() * h2);
-                //mside->setFixedHeight(mside->height() * h2);
-                this->setFixedSize(p->width()/* * w2*/ - 90, p->height() - 25 /** h2*/);
             }
-        }
-        w = p->width();
-        h = p->height();
-        f = 0;
-    };
+            else{
+                if (h2 != 0 && w2 != 0)
+                {
+                    //scroll->setFixedSize(scroll->width() * w2, scroll->height() * h2);
+                    //mside->setFixedHeight(mside->height() * h2);
+                    this->setFixedSize(p->width()/* * w2*/ - 90, p->height() - 25 /** h2*/);
+                }
+            }
+            w = p->width();
+            h = p->height();
+            f = 0;
+        };
+    }
     f++;
 }
 void ObjectEditor::CreateNew()
 {
-//    QPointF point;
-//    Entity *et;
-//    Advertisement *at;
-//    EntityEdit ed;
-//    AdEdit ad;
+    //    QPointF point;
+    //    Entity *et;
+    //    Advertisement *at;
+    //    EntityEdit ed;
+    //    AdEdit ad;
     TreeItem *item = tree->getItem(indexof);
     while (wid->WhileSync)
     {
