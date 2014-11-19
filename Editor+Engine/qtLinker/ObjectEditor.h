@@ -51,6 +51,9 @@ public:
     QModelIndex indexof;
     ObjectEditor *parentob;
     class TreeWidget *wid;
+    void processCtrlC(TreeItem *item);
+    void processCtrlV(TreeItem *item, const QModelIndex& q);
+    void processCtrlX(TreeItem *item, const QModelIndex& q);
 private:
     void newTB(QString n, QString string, int type = Link::type::INT)
     {
