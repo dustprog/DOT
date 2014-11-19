@@ -61,21 +61,7 @@ private:
         textboxes.push_back(temp);
         vLayout->addWidget(textboxes.back().txt, 0, Qt::AlignTop);
     }
-    std::string StringFromVoid(void *L)
-    {
-        std::string *sp = static_cast<std::string*>(L);
-        try
-        {
-            sp->length();
-            return *sp;
-        }
-        catch (exception e)
-        {
-            return std::string("NULL");
-        }
 
-
-    }
     void Clear()
     {
 

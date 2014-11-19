@@ -107,7 +107,7 @@ void ObjectEditor::AttributeShow(EntityAttribute *in)
     update();
     this->ea = in;
     InUse = 1;
-};
+}
 void ObjectEditor::AdvertisementShow(Advertisement *in)
 {
     clearLayout(vLayout);
@@ -138,7 +138,7 @@ void ObjectEditor::AdvertisementShow(Advertisement *in)
     update();
     this->ad = in;
     InUse = 0;
-};
+}
 void ObjectEditor::hideEvent(QHideEvent *event)
 {
 
@@ -442,11 +442,11 @@ void ObjectEditor::paintEvent(QPaintEvent * event)
 }
 void ObjectEditor::CreateNew()
 {
-    QPointF point;
-    Entity *et;
-    Advertisement *at;
-    EntityEdit ed;
-    AdEdit ad;
+//    QPointF point;
+//    Entity *et;
+//    Advertisement *at;
+//    EntityEdit ed;
+//    AdEdit ad;
     TreeItem *item = tree->getItem(indexof);
     while (wid->WhileSync)
     {

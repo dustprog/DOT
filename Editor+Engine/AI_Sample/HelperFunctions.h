@@ -264,7 +264,7 @@ public:
         MyOwner.InUse = false;
         OwnerSet = false;
         Infer = nullptr;
-    };
+    }
 private:
     Ownership MyOwner;
 public:
