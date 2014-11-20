@@ -1,10 +1,11 @@
 #ifndef AILINK_HEADER
 #define AILINK_HEADER
 #include "World.h"
+#include "import_export.h"
     #ifdef AILINK_EXPORTS
-    #define AILINK __declspec(dllexport)
+    #define AILINK DLL_PUBLIC
     #else
-    #define AILINK __declspec(dllimport) 
+    #define AILINK DLL_IMPORT
     #endif
 
     class runner
