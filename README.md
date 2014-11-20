@@ -37,7 +37,7 @@ The build process after acquiring/installing those dependencies should be straig
 ```
 
 ### Notes
-* We will not be releasing source code on Linux and Mac OSX versions of DOT. If you want access to these versions, please contact us at the email provided above.
+* We will not be releasing source code the Mac OSX versions of DOT. If you want access to these versions, please contact us at the email provided above.
 
 * If you wish to use DOT in a commercial (INDIE!!!) product, please contact me before integrating DOT into your product (We want to make sure that its integrated well into most if not all solutions).
 
