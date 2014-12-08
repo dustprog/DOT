@@ -15,7 +15,8 @@
 	[
 		{
 			"Name" : "DOTPlugin",
-			"Type" : "Developer"
+            "Type": "Runtime",
+            "LoadingPhase": "PreDefault"
 		}
 	]
 }
