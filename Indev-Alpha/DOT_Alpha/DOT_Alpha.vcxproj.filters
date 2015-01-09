@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{5c3b34bd-d41d-455c-a2e4-96c48b015f6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MathUtility">
+      <UniqueIdentifier>{5ac7e752-1be3-49bc-b4aa-66a9d83f0679}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers">
+      <UniqueIdentifier>{1a0c4ea0-73e1-469b-b7e6-30b9ec23f258}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Interface\TObject.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\InterfaceBase.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\EntityBase.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="MathUtility\Sigmoid.h">
+      <Filter>MathUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\AdvertisementBase.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\World.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Managers\World.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

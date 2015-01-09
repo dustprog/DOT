@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/qtLinker">
+        <file>DOT_Logo.png</file>
+        <file>QTDark.stylesheet</file>
+    </qresource>
+</RCC>

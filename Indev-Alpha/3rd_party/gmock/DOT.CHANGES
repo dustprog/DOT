@@ -1,0 +1,3 @@
+Removed autoconfigure scripts
+Removed unused sources
+Patched to handle being built as an cmake external_project
