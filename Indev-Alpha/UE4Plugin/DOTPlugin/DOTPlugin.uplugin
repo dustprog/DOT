@@ -1,0 +1,21 @@
+{
+	"FileVersion" : 3,
+	
+	"FriendlyName" : "DOTPlugin",
+	"Version" : 1,
+	"VersionName" : "1.0",
+	"CreatedBy" : "Christoph Bockhahn",
+	"CreatedByURL" : "http://epicgames.com",
+	"EngineVersion" : "4.6.0",
+	"Description" : "DOTPlugin",
+	"Category" : "DOTPlugin",
+	"EnabledByDefault" : true,
+	
+	"Modules" :
+	[
+		{
+			"Name" : "DOTPlugin",
+			"Type" : "Developer"
+		}
+	]
+}
