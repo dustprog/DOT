@@ -4,7 +4,3 @@ set(SRC
 
 add_library(DOT_Interfaces OBJECT ${SRC})
 
-
-if(ENABLE_TESTS)
-add_subdirectory(tests)
-endif()

@@ -5,7 +5,6 @@ set(INCLUDES
 ../DOT_Alpha/Interface/InterfaceBase.h
 ../DOT_Alpha/Interface/TObject.h
 ../DOT_Alpha/Managers/BranchPredictor.h
-../DOT_Alpha/Managers/PythonBinding.h
 ../DOT_Alpha/MathUtility/Sigmoid.h
 ../ZETA_Alpha/Containers/TemplateTreeAddress.h
 ../ZETA_Alpha/Containers/SearchTree.h
@@ -18,4 +17,7 @@ set(INCLUDES
 ../ZETA_Alpha/Processing/ProcessBase.h
 )
 add_executable(test_zero TestingGrounds.cpp ${INCLUDES})
+
+
 target_link_libraries(test_zero DOT_Alpha ${LINK_WITH})
+

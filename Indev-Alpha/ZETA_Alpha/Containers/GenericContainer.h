@@ -5,6 +5,8 @@ template<class T>
 struct TContainerIterator;
 template<class T>
 struct TContainerIterator_Short;
+template<class T>
+struct TContainerIterator_NULL;
 #pragma pack(1)
 template <class T>
 struct TContainer
@@ -105,9 +107,10 @@ public:
 template <class T>
 struct TContainer_Short
 {
+public:
     unsigned short Size;
     T *Interface;
-public:
+
     TContainer_Short(unsigned short Length)
     {
         this->Interface = new T[Length];
@@ -197,6 +200,97 @@ public:
     TContainerIterator_Short<T> end();
     TContainerIterator_Short<T> begin() const;
     TContainerIterator_Short<T> end() const;
+};
+template <class T>
+struct TContainer_NULL
+{
+public:
+    T *Interface;
+
+    TContainer_NULL(unsigned short Length)
+    {
+        this->Interface = new T[Length];
+    }
+
+    TContainer_NULL<T>() : Interface(nullptr) { }
+
+    T &operator[](unsigned short  idx) {
+        return this->Interface[idx];
+    }
+    const T &operator[](unsigned short idx) const {
+        return this->Interface[idx];
+    }
+
+    void push_back(unsigned short Size, const T &v) {
+        resize(Size+1);
+        Interface[Size-1] = v;
+    }
+    T &front() { return Interface[0]; }
+    T &back(short Size) { return Interface[Size-1]; }
+    void push_front(short Size,const T&ob) {
+        resize(Size+1);
+        if(std::is_pod<T>::value) {
+            memmove(Interface+1,Interface,sizeof(T)*(Size-1));
+        }
+        Interface[0] = ob;
+    }
+    void resize(unsigned short Size,unsigned short  n)
+    {
+        TContainer_NULL temp(Size);
+        for (int i = 0; i < Size; i++)
+        {
+            temp.Interface[i] = this->Interface[i];
+        }
+        this->Interface = new T[n];
+        unsigned short n_old = std::min(n, Size);
+        Size = n;
+
+        for (int i = 0; i < n_old; i++)
+        {
+            this->Interface[i] = temp.Interface[i];
+        }
+    }
+    void insert(unsigned short Size, T val, unsigned short Index)
+    {
+        TContainer_Short<T> temp(Size);
+        for (int i = 0; i < Size; i++)
+        {
+            temp.Interface[i] = this->Interface[i];
+        }
+        Size += 1; // make space for new element
+        this->Interface = new T[Size];
+
+        for (unsigned short i = 0; i < Size; i++)
+        {
+            if (i == Index)
+                Interface[i] = val;
+            else if (i > Index)
+                Interface[i + 1] = temp.Interface[i];
+            else
+                Interface[i] = temp.Interface[i];
+        }
+
+    }
+    void Remove(unsigned short Size,unsigned short Index)
+    {
+        TContainer_Short<T> temp(Size - 1);
+        int j = 0;
+        for(unsigned short i = 0; i < Size; i++)
+        {
+            if(i != Index)
+            {
+                temp.Interface[j] = this->Interface[i];
+                j++;
+            }
+        }
+        this->Interface = temp.Interface;
+        Size--;
+    }
+
+    TContainerIterator_NULL<T> begin();
+    TContainerIterator_NULL<T> end();
+    TContainerIterator_NULL<T> begin() const;
+    TContainerIterator_NULL<T> end() const;
 };
 #pragma pack(1)
 template<class T>
@@ -302,5 +396,45 @@ TContainerIterator_Short<T> TContainer_Short<T>::begin() const {
 template<class T>
 TContainerIterator_Short<T> TContainer_Short<T>::end() const {
     return TContainerIterator_Short<T>(nullptr,0);
+}
+#pragma pack(1)
+template<class T>
+struct TContainerIterator_NULL {
+    TContainerIterator_NULL<T> *Owner;
+    short Index;
+    TContainerIterator_NULL(TContainer_NULL<T> *owner=nullptr,short idx=0) : Owner(owner),Index(idx) {
+    }
+
+    TContainerIterator_NULL &operator++() {
+        ++Index;
+        return *this;
+    }
+    TContainerIterator_NULL operator++(int) {
+        TContainerIterator_NULL temp(*this);
+        ++Index;
+        return temp;
+    }
+    T &operator*() {
+        return Owner->Interface[Index];
+    }
+    const T &operator*() const {
+        return Owner->Interface[Index];
+    }
+};
+template<class T>
+TContainerIterator_NULL<T> TContainer_NULL<T>::begin() {
+    return TContainerIterator_NULL<T>(this,0);
+}
+template<class T>
+TContainerIterator_NULL<T> TContainer_NULL<T>::end() {
+    return TContainerIterator_NULL<T>(nullptr,0);
+}
+template<class T>
+TContainerIterator_NULL<T> TContainer_NULL<T>::begin() const {
+    return TContainerIterator_NULL<T>(const_cast<TContainer_Short<T> *>(this),0);
+}
+template<class T>
+TContainerIterator_NULL<T> TContainer_NULL<T>::end() const {
+    return TContainerIterator_NULL<T>(nullptr,0);
 }
 #endif

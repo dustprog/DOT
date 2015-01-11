@@ -25,9 +25,9 @@ void World::simulationStep()
     //We should avoid using less than 2 threads when going through the groups on the CPU. Dedicate a thread per group even
     //At most, going through an entire chain would take 9 passes. This is of course depedent on how many entities are in a single group
 }
-void World::simulateGroup_CPU(IEntityGroup Group)
+void World::simulateGroup_CPU(IEntityGroup *Group)
 {
-    Group.ExecuteQueue();
+    Group->ExecuteQueue();
 }
 /**
  * @brief World::instantiateAttributes

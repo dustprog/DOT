@@ -17,19 +17,19 @@ struct IEntityGroup
     IEntityGroup(){}
     //Prebaked
     //The entire reference table from this node to the origin
-    TContainer<UNibble> ReferenceTable;
+    TContainer_Short<UNibble> ReferenceTable;
     //A list of all gradients created by this leaf node
-    TContainer<Gradient> TemplateBody;
+    TContainer_NULL<Gradient> TemplateBody;
     //TContainer<Tag> TagBody;
 
     //Used as a timing mechanism for threads
     TContainer_Short<DeathTimeConstant> Timing;
     //Recalculated per entity after said entity completes an advertisement. This value takes time into consideration when deriving a score.
-    TContainer_Short<WeighedSum> TransferConstant;
+    TContainer_NULL<WeighedSum> TransferConstant;
     //Attributes that are modified at runtime
     TContainer_Short<AttributeBase> RuntimeBody;
     //A list of objectives that the entity has
-    TContainer_Short<DirectAdvertisementQueue> AdQueue;
+    TContainer_NULL<DirectAdvertisementQueue> AdQueue;
     //Contains a list of all entities that need to be updated in the next pass
     TContainer_Short<ShortQueue> ToUpdate;
 
@@ -38,10 +38,10 @@ struct IEntityGroup
     //Returns the index of the new instance
     short CreateNewInstance()
     {
-        short Size = RuntimeBody.size();
-        TransferConstant.resize(Size + 1);
+        short Size = Timing.size();
+        TransferConstant.resize(Timing.size(), Size + 1);
         Timing.resize(Size + 1);
-        AdQueue.resize(Size + 1);
+        AdQueue.resize(Timing.size(), Size + 1);
         RuntimeBody.resize((Size + 1) * BlockSize); //Block size is the total amount of attributes thats present at that section (ReferenceTableSum.size())
         return Size + 1;
     }
@@ -75,14 +75,17 @@ struct IEntityGroup
 
     IndexScore ComputeInference(short Index, AdvertisementBase *Ad);
 
-    float ReturnScore(short Index, AdvertisementBase *Ad);
+    float ReturnScore(short Index, AdvertisementBase Ad);
 
     /*At this point it is already assumbed that we do indeed want this goal
     We're looking for the lowest value for the distance between our selected local advertisement, and our destination advertisement.
     This attempts to solve a very simple multivariable optimization problem. It, however, is only an approximation. During runtime, the AI must still
     calculate whether or not it wishes to follow its suggested plan.
     */
-    TContainer<IndirectAd> Plan(short Index, AdvertisementBase *Goal);
+    TContainer<IndirectAd> Plan(short Index, AdvertisementBase Goal);
+
+    void AddAttribute(const Gradient grad, const short GlobalAdr) { ReferenceTable.push_back(GlobalAdr); TemplateBody[ReferenceTable.size() - 1] = grad; }
+
 };
 
 

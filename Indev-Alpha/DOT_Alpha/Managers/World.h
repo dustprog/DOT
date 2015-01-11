@@ -39,7 +39,7 @@ public:
     }
     void resetWorld();
     void simulationStep();
-    void simulateGroup_CPU(IEntityGroup Group);
+    void simulateGroup_CPU(IEntityGroup *Group);
     /*
      * Template tree management and access
      */
@@ -49,7 +49,7 @@ public:
     /*
      * Entity template managment interface
      */
-    void instantiateEntityTemplate(IEntityGroup *et);
+    void instantiateEntity(IEntityGroup *et);
 
     /*
      * Simulated entity managment interface

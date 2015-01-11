@@ -73,8 +73,8 @@ struct CostBase
     unsigned int GlobalAdr : 12;
     unsigned int Value : 12;
 
-    //NOTE: Delta is 4 bits while Value is 12 bits. Total size = 3 bytes
-    CostBase(SNibble GlobalAdr = 1, unsigned int Value = 100U)
+    //NOTE: Global is 12 bits while Value is 12 bits. Total size = 3 bytes
+    CostBase(unsigned int GlobalAdr = 0, unsigned int Value = 100U)
     {
         this->GlobalAdr = GlobalAdr;
         this->Value = Value;

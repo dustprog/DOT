@@ -1,6 +1,6 @@
 #include "EntityBase.h"
 
-float IEntityGroup::ReturnScore(short Index, AdvertisementBase *Ad)
+float IEntityGroup::ReturnScore(short Index, AdvertisementBase Ad)
 {
     SNibble BitMask;
     UNibble LocalIndex;
@@ -16,10 +16,10 @@ float IEntityGroup::ReturnScore(short Index, AdvertisementBase *Ad)
     float fLength =  (float)TransferConstant[Index].Sum  / WS_PERCISION;
 
     Length = 1 / fLength;
-    Length *= (int)(float)Ad->TimeConstant + 1;
+    Length *= (int)(float)Ad.TimeConstant + 1;
 
     //Store a temporary copy of our effect
-    for(const CostBase & CurrentEffect : Ad->GetPositiveEffects())
+    for(const CostBase & CurrentEffect : Ad.GetPositiveEffects())
     {
         //Find what attribute we're talking about
         LocalIndex = ReferenceTable[CurrentEffect.GlobalAdr];
@@ -43,11 +43,11 @@ float IEntityGroup::ReturnScore(short Index, AdvertisementBase *Ad)
         return -std::abs(t); //Make sure that advertisement isn't used
 
     //Take the average score
-    t /= (float)(Ad->GetPositiveEffects().size() + 1);
+    t /= (float)(Ad.GetPositiveEffects().size() + 1);
 
 
     //Compute a quick sigmoid
-    WeightedSumSigmoid = Ad->TimeConstant;
+    WeightedSumSigmoid = Ad.TimeConstant;
 
     WeightedSumSigmoid = WeightedSumSigmoid / (1 + WeightedSumSigmoid);
     WeightedSumSigmoid *= fLength;
@@ -56,7 +56,7 @@ float IEntityGroup::ReturnScore(short Index, AdvertisementBase *Ad)
     t /= WeightedSumSigmoid;
 
 
-    for (const CostBase &  CurrentEffect : Ad->GetNegativeEffects())
+    for (const CostBase &  CurrentEffect : Ad.GetNegativeEffects())
     {
         //Find what attribute we're talking about
         LocalIndex = ReferenceTable[CurrentEffect.GlobalAdr];
@@ -78,7 +78,7 @@ float IEntityGroup::ReturnScore(short Index, AdvertisementBase *Ad)
         //Compute a sigmoid. Opinion is utilized as another way to see how heavily an NPC weighs certain attributes
         k += (31.0f / (float)RuntimeBody[LocalIndex].Opinion) * Scoring::NegativeScore((float)CurrentScore, (float)FutureScore, grad); //Average negative return val
     }
-    k /= (float)(Ad->GetNegativeEffects().size() + 1);
+    k /= (float)(Ad.GetNegativeEffects().size() + 1);
 
     /*
         if(Ad->Infer.size() > 0)
@@ -88,7 +88,7 @@ float IEntityGroup::ReturnScore(short Index, AdvertisementBase *Ad)
         */
     return Inferscore + (t * k);
 }
-TContainer<IndirectAd> IEntityGroup::Plan(short Index, AdvertisementBase *Goal)
+TContainer<IndirectAd> IEntityGroup::Plan(short Index, AdvertisementBase Goal)
 {
     TContainer<IndirectAd> SolutionSet;
 
@@ -127,7 +127,7 @@ TContainer<IndirectAd> IEntityGroup::Plan(short Index, AdvertisementBase *Goal)
                 NeededTemp[ReferenceTable[CurrentCost.GlobalAdr]].Value += CurrentCost.Value;
             }
             //Does this ad let us meet the requirements?
-            for (const CostBase & DestinationCost : Goal->GetNegativeEffects())
+            for (const CostBase & DestinationCost : Goal.GetNegativeEffects())
             {
                 //TODO: Retrieve Gradient function
                 Gradient grad = TemplateBody[ReferenceTable[DestinationCost.GlobalAdr]];
@@ -136,7 +136,7 @@ TContainer<IndirectAd> IEntityGroup::Plan(short Index, AdvertisementBase *Goal)
                 AverageScore += Scoring::PositiveScore_Linear((float)NeededTemp[ReferenceTable[DestinationCost.GlobalAdr]].Value, (float)DestinationCost.Value, grad); //Find the score between our destinatin cost, and our temporary attribute value
             }
             //Divide by the full size
-            AverageScore /= Goal->GetNegativeEffects().size();
+            AverageScore /= Goal.GetNegativeEffects().size();
 
             if (AverageScore < Lowest)
             {
@@ -187,7 +187,7 @@ void IEntityGroup::ExecuteQueue()
         for(int j = 0; j < ToUpdate[i].Ad.size(); j++)
         {
 
-            AdvertisementBase *Ad; // = CacheGrab(ToUpdate[i].Ad[j]); //Retrieves the advertisement from a cache lookup table. See: AdvertisementPredictor
+            AdvertisementBase Ad; // = CacheGrab(ToUpdate[i].Ad[j]); //Retrieves the advertisement from a cache lookup table. See: AdvertisementPredictor
             float temp = ReturnScore(ToUpdate[i].Index, Ad);
             //If its higher than our current score, set i to this index
             if(temp > HighestScore)
@@ -205,7 +205,7 @@ void IEntityGroup::ExecuteQueue()
         else
         {
             //TODO: Plan
-            AdvertisementBase *Ad = AdQueue.Interface[ToUpdate[i].Index].Next;
+            AdvertisementBase Ad = *AdQueue.Interface[ToUpdate[i].Index].Next;
             Plan(ToUpdate[i].Index,Ad);
         }
     }

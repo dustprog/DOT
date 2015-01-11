@@ -3,8 +3,6 @@ set(SRC
 )
 
 add_library(DOT_Managers OBJECT ${SRC})
-
-
-if(ENABLE_TESTS)
-add_subdirectory(tests)
-endif()
+add_library(DOT_Py SHARED DOT_Py.h)
+target_link_libraries(DOT_Py DOT_Alpha ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
+set_target_properties( DOT_Py PROPERTIES PREFIX "" )
