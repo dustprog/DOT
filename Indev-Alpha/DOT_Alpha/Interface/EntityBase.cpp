@@ -1,8 +1,8 @@
 #include "EntityBase.h"
-
+#define CHAR_BIT 8
 float IEntityGroup::ReturnScore(short Index, AdvertisementBase Ad)
 {
-    SNibble BitMask;
+    int BitMask;
     UNibble LocalIndex;
     bool NotValid = true;
     unsigned short ConvIndex;
@@ -29,12 +29,12 @@ float IEntityGroup::ReturnScore(short Index, AdvertisementBase Ad)
         //Current is the score before starting the ad, Future would be what it is after
 
         CurrentScore = (float)RuntimeBody[LocalIndex].Value;
-        FutureScore = CurrentScore + (float)(CurrentEffect.Value * Length);
+        FutureScore = CurrentScore + (float)(CurrentEffect.Value) + (-grad.Delta) * Length;
 
         //Does it go over the maximum value? If so, set it to max
-        BitMask =   (grad.Max- (int)FutureScore) >> 31;
-        FutureScore =       ((grad.Max)&BitMask);
-        NotValid = (false)&~BitMask; //Our results have been vailidated, and this advertisement will help atleast one attribute. This should be done during a precompute stage however, and not this late
+        BitMask =    (grad.Max - (int)FutureScore) >> (sizeof(int) * CHAR_BIT - 1);
+        FutureScore =       ((grad.Max)&BitMask) | ((FutureScore)&~BitMask);
+        NotValid = (false)&~BitMask | (true)&BitMask; //Our results have been vailidated, and this advertisement will help atleast one attribute. This should be done during a precompute stage however, and not this late
 
         //Compute a sigmoid. Opinion is utilized as another way to see how heavily an NPC weighs certain attributes
         t += (31.0f / (float)RuntimeBody[LocalIndex].Opinion) * Scoring::PositiveScore(CurrentScore, FutureScore, grad); //Average positive return val
@@ -68,7 +68,7 @@ float IEntityGroup::ReturnScore(short Index, AdvertisementBase Ad)
         CurrentScore = RuntimeBody[LocalIndex].Value;
 
         //How much will this hurt us?
-        FutureScore = CurrentScore - (CurrentEffect.Value * Length);
+        FutureScore = CurrentScore - (float)(CurrentEffect.Value) + (grad.Delta) * Length;
 
         //If this would kill us, just return the negative absolute value of our positive score. Theres no way to avoid branching here
         if (FutureScore <= 0)
@@ -93,7 +93,7 @@ TContainer<IndirectAd> IEntityGroup::Plan(short Index, AdvertisementBase Goal)
     TContainer<IndirectAd> SolutionSet;
 
     //The summation of all advertisements we've confirmed so far
-    TContainer<CostBase> NeededAttributes = TContainer<CostBase>(ReferenceTable.size());
+    TContainer<CostBase> NeededAttributes = TContainer<CostBase>(BlockSize);
     int m = 0;
     for (int i = BlockSize * Index; i < BlockSize * (Index+1); i++)
     {

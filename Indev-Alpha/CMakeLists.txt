@@ -22,7 +22,7 @@ include(ExternalProject)
 
 find_package(Threads)
 find_package(Boost REQUIRED COMPONENTS system)
-find_package( PythonLibs 3.4 REQUIRED )
+#find_package( PythonLibs 3.4 REQUIRED )
 #find_package( Boost COMPONENTS python REQUIRED )
 #find_package(libnabo)
 #find_package(Qt5Core)

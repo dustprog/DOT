@@ -4,43 +4,35 @@
 #include "../ZETA_Alpha/Manager/SearchTreeManager.h"
 #include "../ZETA_Alpha/Containers/SearchTree.h"
 #include "../DOT_Alpha/Interface/EntityBase.h"
-//#include <qt5/QtCore/QCoreApplication>
-//#include "../DOT_Alpha/Managers/PythonBinding.h"
+
 int main(int argc, char* argv[])
 {
-    //QCoreApplication a(argc, argv);
-    //sm.Read(z,a);
     printf("%d\n",sizeof(IEntityGroup));
 
     IEntityGroup *EntityGroup = new IEntityGroup();
-    EntityGroup->TemplateBody.resize(0,4);
-    EntityGroup->TemplateBody[0] = (Gradient());
-    EntityGroup->TemplateBody[1] = (Gradient());
-    EntityGroup->TemplateBody[2] = (Gradient());
-    EntityGroup->TemplateBody[3] = (Gradient());
+    //How many attributes exist in our entire application? Warning: Only 256 can be stored per entity group
+    EntityGroup->SetGlobalAttributeBufferSize(4);
+    //Gives Entity group 4 attributes, providing the global address for each
+    EntityGroup->AddAttribute(0);
+    EntityGroup->AddAttribute(1);
+    EntityGroup->AddAttribute(2);
+    EntityGroup->AddAttribute(3);
 
+    //Creates entity instance 0
+    short MyIndex = EntityGroup->CreateNewInstance();
 
-    auto ReferenceTable = new TContainer_Short<UNibble>();
-
-    //A very simple look up table for global to local attributes
-    ReferenceTable->push_back(0);
-    ReferenceTable->push_back(1);
-    ReferenceTable->push_back(2);
-    ReferenceTable->push_back(3);
-
-    EntityGroup->ReferenceTable = *ReferenceTable;
-    EntityGroup->BlockSize = ReferenceTable->size();
-
-    EntityGroup->CreateNewInstance();
-
-
+    //Change the values of our new instance's first and 3rd attributes
+    EntityGroup->RuntimeBody[(MyIndex * EntityGroup->BlockSize)]
+            = EntityGroup->RuntimeBody[(MyIndex * EntityGroup->BlockSize) + 2] = 30;
     AdvertisementBase SomeAd = AdvertisementBase();
 
-    SomeAd.AddPositiveEffect(CostBase(0, 5)); //Effects global attribute 0 by 5 (Increase)
-    SomeAd.AddPositiveEffect(CostBase(2, 7));
-    SomeAd.AddNegativeEffect(CostBase(1, 5)); //Effects global attribute 1 by 5 (Decrease)
-    SomeAd.AddNegativeEffect(CostBase(3, 5));
+    SomeAd.AddPositiveEffect(CostBase(0, 5)); //Increases global attributes 0 and 2 by 20
+    SomeAd.AddPositiveEffect(CostBase(2, 5));
 
+    SomeAd.AddNegativeEffect(CostBase(1, 70)); //Reduces global attributes 1 and 3 by 50
+    SomeAd.AddNegativeEffect(CostBase(3, 70));
+
+    //Computes the transfer constant for entity instance 0
     EntityGroup->Prepare(0);
 
     float True = EntityGroup->ReturnScore(0, SomeAd);

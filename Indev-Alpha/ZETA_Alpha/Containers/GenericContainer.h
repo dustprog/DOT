@@ -222,7 +222,7 @@ public:
     }
 
     void push_back(unsigned short Size, const T &v) {
-        resize(Size+1);
+        resize(Size,Size+1);
         Interface[Size-1] = v;
     }
     T &front() { return Interface[0]; }

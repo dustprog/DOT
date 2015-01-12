@@ -120,7 +120,7 @@ struct Scoring //Contains a set of helper functions for assisting the entity to 
 		FutureValue /= (float)grad.Max; //Scale the numnber to a 0 - 2 range
 		FutureValue *= 2;
 
-		return (CostAttune_Sqrt(-CurrentValue) - CostAttune_Sqrt(FutureValue)) - Q1_Factor; //Weigh the difference, but make sure anything below the first quartile isn't as important
+        return (CostAttune_Sqrt(-CurrentValue) - CostAttune_Sqrt(FutureValue)) - Q1_Factor; //Weigh the difference, but make sure anything below the first quartile isn't as important
     }
 
 	//Note that this approximation is VERY VERY crude. Its used for distant scheduling among AIs
