@@ -8,6 +8,7 @@
 #include <list>
 #include "../MathUtility/Sigmoid.h"
 #include "../../ZETA_Alpha/Containers/GenericContainer.h"
+#include "../Managers/World.h"
 #include <ZETA_Alpha/Containers/Node.h>
 #define LearningRate 10
 #pragma pack(1)
@@ -109,9 +110,9 @@ struct IEntityGroup
 		for (int i = 0; i < DesiredAttributes.size(); i++)
 		{
             //R = the emotional signal produced by the desire for this attribute
-            float r = RuntimeBody[ReferenceTable[DesiredAttributes[i].GlobalAdr] + (BlockSize * Index)];
+            float r = RuntimeBody[ReferenceTable[DesiredAttributes[i].GlobalAdr] + (BlockSize * Index)].Value;
 
-            r = ((float)Coefficients[i] / 128) * Scoring::PositiveScore(r, 0, DesiredAttributes[i].Value, TemplateBody[ReferenceTable[DesiredAttributes[i].GlobalAdr]].Max);
+            r = ((float)Coefficients[i] / 128) * Scoring::PositiveScore(r, 0, DesiredAttributes[i].Value, DesiredAttributes[i].Value, TemplateBody[ReferenceTable[DesiredAttributes[i].GlobalAdr]].Max); //Value is used twice since we are trying to hit a critical point, and not a range
 
 			f_sum += r;
 		}

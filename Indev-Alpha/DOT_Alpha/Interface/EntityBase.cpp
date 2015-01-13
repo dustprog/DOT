@@ -1,5 +1,4 @@
 #include "EntityBase.h"
-#define CHAR_BIT 8
 float IEntityGroup::ReturnScore(short Index, AdvertisementBase Ad)
 {
     int BitMask;
@@ -34,7 +33,7 @@ float IEntityGroup::ReturnScore(short Index, AdvertisementBase Ad)
         //Does it go over the maximum value? If so, set it to max
         BitMask =    (grad.Max - (int)FutureScore) >> (sizeof(int) * CHAR_BIT - 1);
         FutureScore =       ((grad.Max)&BitMask) | ((FutureScore)&~BitMask);
-        NotValid = (false)&~BitMask | (true)&BitMask; //Our results have been vailidated, and this advertisement will help atleast one attribute. This should be done during a precompute stage however, and not this late
+        NotValid = ((false)&~BitMask) | ((true)&BitMask); //Our results have been vailidated, and this advertisement will help atleast one attribute. This should be done during a precompute stage however, and not this late
 
         //Compute a sigmoid. Opinion is utilized as another way to see how heavily an NPC weighs certain attributes
         t += (31.0f / (float)RuntimeBody[LocalIndex].Opinion) * Scoring::PositiveScore(CurrentScore, FutureScore, grad); //Average positive return val
@@ -187,7 +186,7 @@ void IEntityGroup::ExecuteQueue()
         for(int j = 0; j < ToUpdate[i].Ad.size(); j++)
         {
 
-            AdvertisementBase Ad; // = CacheGrab(ToUpdate[i].Ad[j]); //Retrieves the advertisement from a cache lookup table. See: AdvertisementPredictor
+            AdvertisementBase Ad = ToUpdate[i].Ad[j];
             float temp = ReturnScore(ToUpdate[i].Index, Ad);
             //If its higher than our current score, set i to this index
             if(temp > HighestScore)
@@ -196,8 +195,7 @@ void IEntityGroup::ExecuteQueue()
         //Index is 0 when we're currently continuing our plot queue. We haven't changed our mind about what advertisement we want
         if(Index !=0)
         {
-            AdvertisementBase *Ad; // = CacheGrab(ToUpdate[i].Ad[j]); //Retrieves the advertisement from a cache lookup table. See: AdvertisementPredictor
-
+            AdvertisementBase *Ad = World::get()->getTemplateAd(ToUpdate[i].Ad[Index]);
             this->ReduceAdChain(ToUpdate[i].Index, Ad);
             Ad->BeginUse();
         }

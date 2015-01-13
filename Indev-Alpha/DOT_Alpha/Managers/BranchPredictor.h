@@ -70,7 +70,7 @@ public:
         //TODO: Link to KD-Tree
     }
 
-    //Returns the 255 most used indexes by IEntityGroup's queue. This reduces the need to copy every advertisement to the GPU
+  /*  //Returns the 255 most used indexes by IEntityGroup's queue. This reduces the need to copy every advertisement to the GPU
     void Map(IEntityGroup *ToComputeOver)
     {
 
@@ -95,7 +95,7 @@ public:
         }
         ErrorCorrect();
     }
-
+*/
     //Takes all computed maps from a chain and reduces into a one dimensional array.
     void Reduce(TContainer<TContainer<short>> Map)
     {

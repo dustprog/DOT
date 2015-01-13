@@ -5,7 +5,7 @@
 //A container that can release more than more advertisement. Use this, rather than advertisementbase, to define ingame objects
 struct AdvertisementBroadcaster
 {
-    TContainer<AdvertisementBase> Ads;
+    TContainer<short> Ads; //Ads must be retrieved from the world look up table
 };
 
 struct AdvertisementScore

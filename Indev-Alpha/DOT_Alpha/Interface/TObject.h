@@ -45,5 +45,7 @@ public:
         bool same_address = (Addr == other.Addr);
         return same_name &&  same_address;
     }
+
+    void SetAddress(T Addr) { this->Addr = Addr; }
 };
 #endif

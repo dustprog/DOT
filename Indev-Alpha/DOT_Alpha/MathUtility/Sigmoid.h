@@ -32,36 +32,33 @@ struct Scoring //Contains a set of helper functions for assisting the entity to 
 	{
 		return X / (sqrt2(1 + (X * X)));
 	}
-
-    static float PositiveScore(float CurrentValue, float FutureValue, float Q3, float Max)
+    static float CostAttune_XToTheFourth(float X, float Factor = 1)
     {
-        //This is what a Positive score graph would look like if the sigmoids were drawn out: http://i.imgur.com/fYY55Yv.png
+        return 1 - (1 / (1+ Factor*(X*X)));
+    }
 
-        float Q3_Factor = (float)Q3 / (float)Max;
-        Q3_Factor *= 2;
+    static float PositiveScore(float CurrentValue, float FutureValue, float Q1, float Q3, float Max)
+    {
+        float med = (Q1 + Q3) / 2;
 
-        CurrentValue /= (float)Max; //Scale the number to a  0 - 2 range
-        CurrentValue *= 2;
+        float CurrentValue_t = CurrentValue - (float)Q3; //Scale the number to a  0 - 2 range
+        CurrentValue_t /= med;
+        float FutureValue_t = FutureValue - (float)Q3; //Scale the numnber to a 0 - 2 range
+        FutureValue_t /= med;
 
-        FutureValue /= (float)Max; //Scale the numnber to a 0 - 2 range
-        FutureValue *= 2;
-
-        return (CostAttune_Sqrt(CurrentValue) - CostAttune_Sqrt(-FutureValue)) - Q3_Factor; //Weigh the difference, but make sure anything above the third quartile isn't as important
+        return CostAttune_XToTheFourth(CurrentValue_t, CurrentValue / Q1) - CostAttune_XToTheFourth(FutureValue_t,FutureValue / Q1); //Weigh the difference, but make sure anything above the third quartile isn't as important
     }
     static float PositiveScore(float CurrentValue, float FutureValue, Gradient grad)
 	{
 		//This is what a Positive score graph would look like if the sigmoids were drawn out: http://i.imgur.com/fYY55Yv.png
+        float med = (grad.Q1 + grad.Q3) / 2;
 
-		float Q3_Factor = (float)grad.Q3 / (float)grad.Max;
-		Q3_Factor *= 2;
+        float CurrentValue_t = CurrentValue - (float)grad.Q3; //Scale the number to a  0 - 2 range
+        CurrentValue_t /= med;
+        float FutureValue_t = FutureValue - (float)grad.Q3; //Scale the numnber to a 0 - 2 range
+        FutureValue_t /= med;
 
-		CurrentValue /= (float)grad.Max; //Scale the number to a  0 - 2 range
-		CurrentValue *= 2;
-
-		FutureValue /= (float)grad.Max; //Scale the numnber to a 0 - 2 range
-		FutureValue *= 2;
-
-        return (CostAttune_Sqrt(CurrentValue) - CostAttune_Sqrt(-FutureValue)) - Q3_Factor; //Weigh the difference, but make sure anything below the first quartile isn't as important
+        return CostAttune_XToTheFourth(CurrentValue_t, CurrentValue / grad.Q1) - CostAttune_XToTheFourth(FutureValue_t,FutureValue / grad.Q1); //Weigh the difference, but make sure anything above the third quartile isn't as important
     }
 
 	//Note that this approximation is VERY VERY crude. Its used for distant scheduling among AIs
@@ -92,35 +89,29 @@ struct Scoring //Contains a set of helper functions for assisting the entity to 
 
 		return (CurrentValue + FutureValue) - Q3_Factor;
 	}
-    static float NegativeScore(float CurrentValue, float FutureValue, float Q1, float Max)
+    static float NegativeScore(float CurrentValue, float FutureValue, float Q1,float Q3, float Max)
     {
-        //This is what a Negative score graph would look like if the sigmoids were drawn out: http://i.imgur.com/gvD0PA7.png
 
-        float Q1_Factor = Q1 / Max;
-        Q1_Factor *= 2;
+        //This is what a Positive score graph would look like if the sigmoids were drawn out: http://i.imgur.com/fYY55Yv.png
+        float med = (Q1 + Q3) / 2;
 
-        CurrentValue /= Max; //Scale the number to a  0 - 2 range
-        CurrentValue *= 2;
+        float CurrentValue_t = CurrentValue - (float)Q1; //Scale the number to a  0 - 2 range
+        CurrentValue_t /= med;
+        float FutureValue_t = FutureValue - (float)Q1; //Scale the numnber to a 0 - 2 range
+        FutureValue_t /= med;
 
-        FutureValue /= Max; //Scale the numnber to a 0 - 2 range
-        FutureValue *= 2;
-
-        return (CostAttune_Sqrt(-CurrentValue) - CostAttune_Sqrt(FutureValue)) - Q1_Factor; //Weigh the difference, but make sure anything below the first quartile isn't as important
+        return CostAttune_XToTheFourth(CurrentValue_t, CurrentValue / Q3) - CostAttune_XToTheFourth(FutureValue_t,FutureValue / Q3); //Weigh the difference, but make sure anything above the third quartile isn't as important
     }
     static float NegativeScore(float CurrentValue, float FutureValue, Gradient grad)
 	{
-		//This is what a Negative score graph would look like if the sigmoids were drawn out: http://i.imgur.com/gvD0PA7.png
+        float med = (grad.Q1 + grad.Q3) / 2;
 
-		float Q1_Factor = (float)grad.Q1 / (float)grad.Max;
-		Q1_Factor *= 2;
+        float CurrentValue_t = CurrentValue - (float)grad.Q1; //Scale the number to a  0 - 2 range
+        CurrentValue_t /= med;
+        float FutureValue_t = FutureValue - (float)grad.Q1; //Scale the numnber to a 0 - 2 range
+        FutureValue_t /= med;
 
-		CurrentValue /= (float)grad.Max; //Scale the number to a  0 - 2 range
-		CurrentValue *= 2;
-
-		FutureValue /= (float)grad.Max; //Scale the numnber to a 0 - 2 range
-		FutureValue *= 2;
-
-        return (CostAttune_Sqrt(-CurrentValue) - CostAttune_Sqrt(FutureValue)) - Q1_Factor; //Weigh the difference, but make sure anything below the first quartile isn't as important
+        return CostAttune_XToTheFourth(CurrentValue_t, CurrentValue / grad.Q3) - CostAttune_XToTheFourth(FutureValue_t,FutureValue / grad.Q3); //Weigh the difference, but make sure anything above the third quartile isn't as important
     }
 
 	//Note that this approximation is VERY VERY crude. Its used for distant scheduling among AIs

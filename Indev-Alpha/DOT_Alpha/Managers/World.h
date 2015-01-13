@@ -25,6 +25,7 @@ public:
 private:
 
     std::vector<IEntityGroup *> m_simulated_entities;
+    TContainer_Short<AdvertisementBase> m_template_ads; //Should be ordered by frequency of usage
     TemplateTreeNode *m_template_tree_root;
     static World *m_instance;
     //Constructor and destructor are private to prevent their use in user code.
@@ -55,5 +56,11 @@ public:
      * Simulated entity managment interface
      */
     uint32_t numSimulatedEntities() { return m_simulated_entities.size(); }
+
+    uint32_t numAds() { return m_template_ads.size(); }
+
+    AdvertisementBase *getTemplateAd(unsigned short Index) { return &m_template_ads[Index]; }
+    void pushBackTemplateAd(AdvertisementBase *Ad) { m_template_ads.push_back(*Ad); Ad->SetAddress(m_template_ads.size() - 1); }
+
 
 };

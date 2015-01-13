@@ -132,7 +132,7 @@ public:
 //Used as a temporary reference to an advertisement
 struct IndirectAd
 {
-    short Address;
+    unsigned short Address;
     UNibble TimeConstant : 8;
 };
 
@@ -158,8 +158,8 @@ struct WeighedSum
 //Index poitns to the entity this structure relates to. Ad points to all ads that interest this entity
 struct ShortQueue
 {
-    short Index;
-    TContainer<short> Ad;
+    unsigned short Index;
+    TContainer<unsigned short> Ad;
 };
 
 

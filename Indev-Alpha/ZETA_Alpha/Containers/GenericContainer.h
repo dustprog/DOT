@@ -125,7 +125,7 @@ public:
     const T &operator[](unsigned short idx) const {
         return this->Interface[idx];
     }
-    short size() const
+    unsigned short size() const
     {
         return this->Size;
     }
