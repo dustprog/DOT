@@ -30,6 +30,8 @@ struct IEntityGroup
     TContainer_Short<AttributeBase> RuntimeBody;
     //A list of objectives that the entity has
     TContainer_NULL<DirectAdvertisementQueue> AdQueue;
+    //A list of all inventory pieces for each entity
+    TContainer_NULL<Inventory> Inventories;
     //Contains a list of all entities that need to be updated in the next pass
     TContainer_Short<ShortQueue> ToUpdate;
 
@@ -49,7 +51,7 @@ struct IEntityGroup
     void ReduceAdChain(short Index, AdvertisementBase *Ad)
     {
         AdQueue[Index].Indirect.pop_back();
-        AdQueue[Index].Next = Ad;
+        AdQueue[Index].Indirect.push_back(IndirectAd(Ad->ReturnAddress(), Ad->TimeConstant));
     }
 
     void ExecuteQueue();
@@ -88,6 +90,10 @@ struct IEntityGroup
     void AddAttribute(const UNibble GlobalAdr, const Gradient grad = Gradient()) { ReferenceTable[GlobalAdr] = BlockSize; TemplateBody.push_back(BlockSize,GlobalAdr); BlockSize++; }
     //Warning: Deletes all data within the local reference table
     void SetGlobalAttributeBufferSize(short Size) { ReferenceTable.Interface = new UNibble[Size]; }
+
+
+    //WARNING: UNOPTIMIZED
+    Item selectInventoryObject(short Index);
 
     //Deleted names since they would be deleted anyway during DOT's prebake phase
 #ifndef NO_TAGS //WARNING: LACKING OPTIMIZATION. CURRENTLY A WIP. NOT VIABLE UNTIL BETA

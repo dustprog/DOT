@@ -1,4 +1,5 @@
 #include "EntityBase.h"
+#include "../Managers/World.h"
 float IEntityGroup::ReturnScore(short Index, AdvertisementBase Ad)
 {
     int BitMask;
@@ -203,8 +204,8 @@ void IEntityGroup::ExecuteQueue()
         else
         {
             //TODO: Plan
-            AdvertisementBase Ad = *AdQueue.Interface[ToUpdate[i].Index].Next;
-            Plan(ToUpdate[i].Index,Ad);
+            AdvertisementBase *Ad = World::get()->getTemplateAd(AdQueue.Interface[ToUpdate[i].Index].Indirect[0].Address);
+            Plan(ToUpdate[i].Index,*Ad);
         }
     }
 }
@@ -224,4 +225,21 @@ IndexScore IEntityGroup::ComputeInference(short Index, AdvertisementBase *Ad)
         }
         */
     return _indexscore;
+}
+Item IEntityGroup::selectInventoryObject(short Index)
+
+{
+    Item *SelectedItem;
+    float TempScore = -1.0f; //Scores can't go lower than -1
+    for(int i = 0; i < Inventories[Index].size(); i++)
+    {
+          float ft = ReturnScore(Index,*World::get()->getTemplateAd(World::get()->getTemplateItem(Inventories[Index][i])->UseEffect));
+
+          if(ft > TempScore)
+          {
+              SelectedItem = World::get()->getTemplateItem(Inventories[Index][i]);
+              TempScore = ft;
+          }
+    }
+    return *SelectedItem;
 }

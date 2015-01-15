@@ -128,12 +128,23 @@ public:
         InUse = 0;
     }
 };
-
+//Every address in item must point to its correlating advertisement
+struct Item
+{
+    short PickupEffect;
+    short PassiveEffect;
+    short UseEffect;
+    short ThrowAwayEffect;
+};
+typedef short ItemAddress;
+typedef TContainer<ItemAddress> Inventory;
 //Used as a temporary reference to an advertisement
 struct IndirectAd
 {
     unsigned short Address;
     UNibble TimeConstant : 8;
+
+    IndirectAd(short Adr= 0, UNibble T = 1) { this->Address  = Adr; this->TimeConstant = T; }
 };
 
 struct DeathTimeConstant
@@ -144,8 +155,6 @@ struct DeathTimeConstant
 
 struct DirectAdvertisementQueue
 {
-    //The next advertisement we'll use
-    AdvertisementBase *Next;
     //A list of advertisements to be loaded on a later date
     TContainer<IndirectAd> Indirect;
 };

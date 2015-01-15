@@ -61,6 +61,7 @@ public:
 
     AdvertisementBase *getTemplateAd(unsigned short Index) { return &m_template_ads[Index]; }
     void pushBackTemplateAd(AdvertisementBase *Ad) { m_template_ads.push_back(*Ad); Ad->SetAddress(m_template_ads.size() - 1); }
-
+    //TODO
+    Item *getTemplateItem(unsigned short Index) { return new Item; }
 
 };
