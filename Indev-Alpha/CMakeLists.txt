@@ -32,8 +32,8 @@ find_package(Boost REQUIRED COMPONENTS system)
 #find_package(Qt5PrintSupport)
 
 # help the cmake find 3rd_party compiled/installed packages
-#set(CMAKE_PREFIX_PATH  "${CMAKE_PREFIX_PATH};${PROJECT_SOURCE_DIR}/3rd_party")
-#set(libnabo_DIR "${CMAKE_PREFIX_PATH};${PROJECT_SOURCE_DIR}/3rd_party/libnabo-master")
+set(CMAKE_PREFIX_PATH  "${CMAKE_PREFIX_PATH};${PROJECT_SOURCE_DIR}/3rd_party")
+set(libnabo_DIR "${CMAKE_PREFIX_PATH};${PROJECT_SOURCE_DIR}/3rd_party/libnabo-master")
 set(Boost_USE_MULTITHREADED      ON)
 include_directories("${Boost_INCLUDE_DIRS}" "/usr/include/python3.4/")
 include_directories(.)

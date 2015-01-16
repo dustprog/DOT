@@ -38,26 +38,4 @@ public:
     void SetData(T NewData) { Data = NewData; }
 };
 #endif
-//========================================================
-// Disabled code
-//========================================================
-//TContainer<T> Contents;
-//    void OnLengthChange()
-//    {
-//        for (int i = 0; i < Children.size(); i++)
-//        {
-//            TNode<T> node = Children[i];
-//            node.Contents.Size = this->Contents.Size + 1;
-//            node.OnLengthChange();
-//        }
-//    }
-//void OnAddNewChain()
-//{
-//    //Set the parent value for the node we just added
-//    Children.back()->Parent = this;
-//    OnLengthChange();
-//}
-//UNibble ReturnLength()
-//{
-//    return Contents.Size;
-//}
+

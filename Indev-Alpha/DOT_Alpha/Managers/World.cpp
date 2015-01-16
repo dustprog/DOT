@@ -19,11 +19,10 @@ void World::simulationStep()
 {
 
     //Find chain to simulate
-    //Retrieve reference table (No longer needed -Louis)
     //For every group in this chain simulateGroup()
     //Some groups are offloaded to GPU, while other groups remain on the CPU. Perhaps every other is done on the GPU? Yeah sounds good -Louis
     //We should avoid using less than 2 threads when going through the groups on the CPU. Dedicate a thread per group even
-    //At most, going through an entire chain would take 9 passes. This is of course depedent on how many entities are in a single group
+    //At most, going through an entire chain would take 2 * ADDR_SIZE passes. This is of course depedent on how many entities are in a single group
 }
 void World::simulateGroup_CPU(IEntityGroup *Group)
 {

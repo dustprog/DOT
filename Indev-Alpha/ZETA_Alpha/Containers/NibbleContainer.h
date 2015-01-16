@@ -7,7 +7,7 @@
 #include "generic_typedefs.h"
 
 //Maximum amount of entites = 15^(2 * ADDR_SIZE) + MAX_VAL(unsigned short). Chains can only be 2 * ADDR_SIZE long however. Memory usage per address: ADDR_SIZE + 1 bytes
-#define ADDR_SIZE 3
+#define ADDR_SIZE 6
 //Semi-octet size is the amount of bits that are stored in every Nibble
 #define SEMIOCTET_SIZE 4
 #define MODULO_SIZE (8 / SEMIOCTET_SIZE)
@@ -141,73 +141,6 @@ struct NContainerIterator {
 };
 inline NContainerIterator NContainer::begin() { return NContainerIterator(this,0); }
 inline NContainerIterator NContainer::end() { return NContainerIterator(nullptr,0); }
-struct NContainer_Signed
-{
-private:
-    UNibble Index : 8;
-    UNibble Size : 8;
-    NInterface_Signed *Interface;
-    void WriteContainerLow(SNibble val)
-    {
-        Interface[Index / 2].Low = val;
-        IncrementWriteHead();
-    };
-    void WriteContainerHigh(SNibble val)
-    {
-        Interface[Index / 2].High = val;
-        IncrementWriteHead();
-    };
-public:
-    NInterface_Signed *ReturnPointer()
-    {
-        return Interface;
-    }
-    UNibble size()
-    {
-        return Size;
-    }
-    UNibble ReturnCurrentWriteHead()
-    {
-        return Index;
-    }
-    void IncrementWriteHead()
-    {
-        Index++;
-    }
-    void Resize(UNibble n)
-    {
-        NContainer_Signed *temp = new NContainer_Signed(Size);
-
-        for (int i = 0; i < Size / 2; i++)
-        {
-            WriteContainerLow(Interface[i].Low);
-            WriteContainerHigh(Interface[i].High);
-        }
-        SNibble tempp = n % MODULO_SIZE;
-        Interface = new NInterface_Signed[n / 2 + tempp];
-        Size = n;
-        Index = 0;
-        n = std::min(n, Size);
-
-        for (int i = 0; i < Size / 2; i++)
-        {
-            WriteContainerLow(temp->Interface[i].Low);
-            WriteContainerHigh(temp->Interface[i].High);
-        }
-
-    }
-    NContainer_Signed(UNibble Length)
-    {
-        UNibble temp = Length % MODULO_SIZE;
-        Interface = new NInterface_Signed[Length / 2 + temp]; //If Length is odd, allocate an extra position
-        Index = 0;
-        Size = Length;
-    }
-    void SetWriteHead(UNibble point)
-    {
-        Index = point;
-    }
-};
 
 struct PointerInterface
 {

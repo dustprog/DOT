@@ -29,11 +29,13 @@ struct IEntityGroup
     //Attributes that are modified at runtime
     TContainer_Short<AttributeBase> RuntimeBody;
     //A list of objectives that the entity has
-    TContainer_NULL<DirectAdvertisementQueue> AdQueue;
+    TContainer_NULL<AdvertisementQueue> AdQueue;
     //A list of all inventory pieces for each entity
     TContainer_NULL<Inventory> Inventories;
     //Contains a list of all entities that need to be updated in the next pass
     TContainer_Short<ShortQueue> ToUpdate;
+    //Custom defines made by the designers
+    TContainer_NULL<CustomEntityDefines> EntityDefines;
 
     //The amount of all attributes up this this point inclusive. (TemplateBody.size())
     short BlockSize;

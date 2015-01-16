@@ -5,7 +5,10 @@
 #include "../../ZETA_Alpha/Containers/TemplateTreeAddress.h"
 
 #include "../../ZETA_Alpha/Containers/GenericContainer.h"
-
+#include "../../3rd_party/libnabo-master/nabo/nabo.h"
+using namespace Nabo;
+using namespace Eigen;
+#define SPATIAL_DIM 3 //How many spatial dimensions are we working in?
 struct RuntimeAddress
 {
     //Template tree address
@@ -13,6 +16,15 @@ struct RuntimeAddress
     //Instance number
     unsigned short Index;
 };
+struct CustomEntityDefines
+{
+    VectorXf Position;
+    CustomEntityDefines()
+    {
+        Position = VectorXf::setZero(SPATIAL_DIM);
+    }
+};
+
 struct Gradient
 {
     SNibble Delta : 6;
@@ -153,7 +165,7 @@ struct DeathTimeConstant
     UNibble TimeConstant : 7;
 };
 
-struct DirectAdvertisementQueue
+struct AdvertisementQueue
 {
     //A list of advertisements to be loaded on a later date
     TContainer<IndirectAd> Indirect;
@@ -171,5 +183,10 @@ struct ShortQueue
     TContainer<unsigned short> Ad;
 };
 
+struct Vecf3
+{
+    float X,Y,Z;
+    Vecf3(float x, float y, float z) { this->X = x; this->Y = y; this->Z = z; }
+};
 
 #endif
