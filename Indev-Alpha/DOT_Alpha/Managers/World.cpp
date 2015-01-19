@@ -42,7 +42,7 @@ void World::instantiateEntity(IEntityGroup *et)
 void World::resetWorld()
 {
 
-    m_simulated_entities.clear();
+    //m_simulated_entities.clear();
     delete m_template_tree_root;
     m_template_tree_root = nullptr;
 }

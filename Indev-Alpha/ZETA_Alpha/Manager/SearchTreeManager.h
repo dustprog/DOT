@@ -26,5 +26,20 @@ struct SManager
         }
         return Current.ReturnData();
     }
+
+    template<class T>
+    static TNode<T> *GetNode(TNode<T> *Tree, TAddress Address)
+    {
+        auto iter = Address.begin();
+        auto fin = Address.end();
+
+        TNode<T> *Current = Tree;
+        for ( ;iter!=fin; ++iter)
+        {
+            Current = Current->Children[*iter];
+        }
+        return Current;
+    }
+
 };
 #endif

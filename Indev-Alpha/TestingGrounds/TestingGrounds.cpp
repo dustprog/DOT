@@ -3,7 +3,11 @@
 #include <cstdio>
 #include "../ZETA_Alpha/Manager/SearchTreeManager.h"
 #include "../ZETA_Alpha/Containers/SearchTree.h"
-#include "../DOT_Alpha/Interface/EntityBase.h"
+#include "../DOT_Alpha/Managers/World.h"
+#include <iostream>
+#include <iomanip>
+#include <chrono>
+#include <ctime>
 
 int main(int argc, char* argv[])
 {
@@ -20,19 +24,25 @@ int main(int argc, char* argv[])
     short MyIndex = EntityGroup->CreateNewInstance();
 
     //Change the values of our new instance's first and 3rd attributes
-    EntityGroup->RuntimeBody[(MyIndex * EntityGroup->BlockSize)]
-            = EntityGroup->RuntimeBody[(MyIndex * EntityGroup->BlockSize) + 2] = 30;
+    EntityGroup->RuntimeBody[(MyIndex * EntityGroup->BlockSize)].Value
+            = EntityGroup->RuntimeBody[(MyIndex * EntityGroup->BlockSize) + 2].Value = 30;
     AdvertisementBase SomeAd = AdvertisementBase();
 
-    SomeAd.AddPositiveEffect(CostBase(0,1)); //Increases global attributes 0 and 2 by 20
+    SomeAd.AddPositiveEffect(CostBase(0,20)); //Increases global attributes 0 and 2 by 20
+    SomeAd.AddPositiveEffect(CostBase(2,20)); //Increases global attributes 2 and 2 by 20
 
-    SomeAd.AddNegativeEffect(CostBase(1, 1)); //Reduces global attributes 1 and 3 by 50
+    SomeAd.AddNegativeEffect(CostBase(1, 50)); //Reduces global attributes 1 and 3 by 50
+    SomeAd.AddNegativeEffect(CostBase(3, 50)); //Reduces global attributes 1 and 3 by 50
     World::get()->pushBackTemplateAd(&SomeAd);
     //Computes the transfer constant for entity instance 0
     EntityGroup->Prepare(0);
 
-    float True = EntityGroup->ReturnScore(0, SomeAd);
-    printf(" %f \n",True);
+    auto t_start = std::chrono::high_resolution_clock::now();
+    for(int i = 0; i < 1000000; i++)
+        EntityGroup->ReturnScore(0, SomeAd);
+    auto t_end = std::chrono::high_resolution_clock::now();
+
+    printf(" %f \n",1000000.0f / std::chrono::duration<double, std::milli>(t_end-t_start).count());
     return 0;
 }
 

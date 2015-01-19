@@ -21,7 +21,7 @@ struct CustomEntityDefines
     VectorXf Position;
     CustomEntityDefines()
     {
-        Position = VectorXf::setZero(SPATIAL_DIM);
+        //Position = VectorXf::setZero(SPATIAL_DIM);
     }
 };
 
@@ -67,7 +67,7 @@ struct AttributeBase
     unsigned int Opinion : 6;
 
     //NOTE: Opinion is 6 bits while Value is 10 bits. Total size = 2 bytes
-    AttributeBase(unsigned int Value = 100U,unsigned int Opinion = 31U )
+    AttributeBase(Gradient grad = Gradient(),unsigned int Value = 100U,unsigned int Opinion = 31U )
     {
         this->Opinion = Opinion;
         this->Value = Value;

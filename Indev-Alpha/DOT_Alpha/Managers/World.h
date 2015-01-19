@@ -7,7 +7,7 @@
 
 #include <DOT_Alpha/Interface/InterfaceBase.h>
 #include <DOT_Alpha/Managers/BranchPredictor.h>
-
+#include "../DOTbuilder/InterfaceBuilder.h"
 struct TAddress;
 template <class T>
 struct QueueObject;
@@ -21,7 +21,7 @@ public:
     typedef TNode<TContainer<AttributeBase> > TemplateTreeNode;
 private:
 
-    TNode<IEntityGroup> m_simulated_entities;
+    TNode<IEntityGroup*> m_simulated_entities;
     TContainer_Short<AdvertisementBase> m_template_ads; //Should be ordered by frequency of usage (DONE)
     TemplateTreeNode *m_template_tree_root;
     static World *m_instance;
@@ -48,7 +48,10 @@ public:
     void createNewAdInstance(short AdIndex, VectorXf vec)
     {
         m_simulated_ads.resize(m_simulated_ads.rows() + 1,SPATIAL_DIM);
-        m_simulated_ads(m_simulated_ads.rows()) = vec;
+        //This for loop will unroll for obvious reasons
+        for(int i = 0; i < SPATIAL_DIM; i++)
+           m_simulated_ads(m_simulated_ads.rows(), i) = vec[i];
+
         m_simulated_ads_refences->push_back(AdIndex);
     }
     //Call this after you no longer are setting up your initial world state
@@ -68,7 +71,7 @@ public:
         for(int i = 0; i < m_search_queue->size(); i++)
         {
             VectorXi indicies(SearchSize);
-            this->m_searchtree->knn(/* Retrieve position from the m_simulated_entities*/nullptr,indicies,nullptr,SearchSize);
+            //this->m_searchtree->knn(/* Retrieve position from the m_simulated_entities*/nullptr,indicies,nullptr,SearchSize);
             //Add the returned value back to the local ads reference for each entity instance. TODO: Create function within IEntityGroup for this
             //Finalize
         }
@@ -89,7 +92,7 @@ public:
     /*
      * Simulated entity managment interface
      */
-    uint32_t numSimulatedEntities() { return m_simulated_entities.size(); }
+    //uint32_t numSimulatedEntities() { return m_simulated_entities.size(); }
 
     uint32_t numAds() { return m_template_ads.size(); }
 

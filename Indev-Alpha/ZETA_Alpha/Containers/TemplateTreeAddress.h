@@ -7,12 +7,7 @@
 struct TAddress : public NContainer
 {
 public:
-    TAddress() : NContainer((UNibble)ADDR_SIZE * 2) { }
-//    template<class J>
-//    J Retrieve(TContainerType<J> Input)
-//    {
-//        return SManager::Read((TNode<J>)Input, this).ReturnData();
-//    }
+    TAddress(UNibble Size = ADDR_SIZE * 2) : NContainer(Size) { }
 };
 
 #endif // TEMPLATETREEADDRESS
