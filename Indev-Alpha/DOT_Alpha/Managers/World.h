@@ -7,7 +7,6 @@
 
 #include <DOT_Alpha/Interface/InterfaceBase.h>
 #include <DOT_Alpha/Managers/BranchPredictor.h>
-#include "../DOTbuilder/InterfaceBuilder.h"
 struct TAddress;
 template <class T>
 struct QueueObject;

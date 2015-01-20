@@ -2,7 +2,7 @@
 //
 #include <cstdio>
 #include "../ZETA_Alpha/Manager/SearchTreeManager.h"
-#include "../ZETA_Alpha/Containers/SearchTree.h"
+#include "../DOT_Alpha/DOTbuilder/InterfaceBuilder.cpp"
 #include "../DOT_Alpha/Managers/World.h"
 #include <iostream>
 #include <iomanip>
@@ -43,6 +43,44 @@ int main(int argc, char* argv[])
     auto t_end = std::chrono::high_resolution_clock::now();
 
     printf(" %f \n",1000000.0f / std::chrono::duration<double, std::milli>(t_end-t_start).count());
+
+
+    //DOTbuild Test
+    EntityTemplate newT = EntityTemplate::_create("Entity")
+            ._addAttribute("Food")
+            ._addAttribute("Wealth")
+            ._addAttribute("Wealth")
+            ._addAttribute("Wealth")
+            ._addTag("Blacksmith");
+
+    AttributeTemplate newAT = AttributeTemplate::_create("Food")
+            ._setGradient(Gradient(1U,5U,50U,70U,110U))
+            ._setValue(60)
+            ._setOpinion(12U);
+
+    AttributeTemplate newAT2 = AttributeTemplate::_create("Wealth")
+            ._setGradient(Gradient(1U,5U,50U,70U,110U))
+            ._setValue(60)
+            ._setOpinion(12U);
+
+    TagTemplate newTag = TagTemplate::_create("Blacksmith")
+            ._addAttribute("Wealth",1,90);
+
+
+
+    DB::get()->Add(newT);
+    DB::get()->Add(newAT);
+    DB::get()->Add(newAT2);
+    DB::get()->Add(newTag);
+
+    WorldCompiled _compiled = DB::get()->Compile();
+
+    TNode<IEntityGroup> node = _compiled.EntityTemplateTree;
+
+    IEntityGroup temp =node.getData();
+    temp.CreateNewInstance();
+    temp.Prepare(0);
+    temp.ReturnScore(0,SomeAd);
     return 0;
 }
 

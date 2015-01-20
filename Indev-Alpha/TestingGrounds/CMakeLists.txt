@@ -5,7 +5,6 @@ set(INCLUDES
 ../DOT_Alpha/Interface/InterfaceBase.h
 ../DOT_Alpha/Interface/TObject.h
 ../DOT_Alpha/Managers/BranchPredictor.h
-../DOT_Alpha/DOTbuilder/InterfaceBuilder.h
 ../DOT_Alpha/MathUtility/Sigmoid.h
 ../ZETA_Alpha/Containers/TemplateTreeAddress.h
 ../ZETA_Alpha/Containers/SearchTree.h

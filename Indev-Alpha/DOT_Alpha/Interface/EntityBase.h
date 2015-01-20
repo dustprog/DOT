@@ -9,6 +9,7 @@
 #include "../MathUtility/Sigmoid.h"
 #include "../../ZETA_Alpha/Containers/GenericContainer.h"
 #include "../Managers/World.h"
+#include "../Interface/TagBase.h"
 #include <ZETA_Alpha/Containers/Node.h>
 #define LearningRate 10
 #pragma pack(1)
@@ -100,10 +101,10 @@ struct IEntityGroup
     //Deleted names since they would be deleted anyway during DOT's prebake phase
 #ifndef NO_TAGS //WARNING: LACKING OPTIMIZATION. CURRENTLY A WIP. NOT VIABLE UNTIL BETA
 	//indices of tags in tag list per entity 
-    TContainer_NULL<TContainer<short>> TagIndicesPerEntity;
+    TContainer_NULL<TContainer<unsigned short>> TagIndicesPerEntity;
 
 	//Life objectives for all tags allowed in this entity group
-    TContainer<AdvertisementBase> TagObjectives; //This data will rarely get accessed. Perhaps we should move it somewhere else?
+    TContainer_Short<unsigned short> TagObjectives; //This data will rarely get accessed. Perhaps we should move it somewhere else?
 
     //The attributes that the tags wish to modify
     TContainer_Short<CostBase> DesiredAttributes;
@@ -111,6 +112,7 @@ struct IEntityGroup
     //Coefficients of emotional importance. NULL, since it will always be the same size as Desired Attributes
     TContainer_NULL<SNibble> Coefficients;
 
+    TContainer_Short<TagLookup> TagReferenceTable;
 	//calculates the sum per the equation
     float f_sum(short Index)
 	{
@@ -133,6 +135,29 @@ struct IEntityGroup
         //Set AttributeBase::Opinion equal to X_new. This is a neural network system, where the amount of neurons per tag are equal to DesiredAttributes.size()
 		return X_old + (LearningRate * f_sum * WeighedSum);
 	}
+    //DOES NOT INCLUDE BLACKBOARDS
+    void AddTag(TContainer<CostBase> attr, TContainer_NULL<SNibble> CoE, TContainer<unsigned short> Objectives)
+    {
+        TagLookup tl;
+        tl.AttrBegin = DesiredAttributes.size();
+        tl.AttrEnd = tl.AttrBegin + attr.size();
+
+        tl.ObjectivesBegin = TagObjectives.size();
+        tl.ObjectivesEnd = tl.ObjectivesBegin + Objectives.size();
+
+        for(int i = 0; i < attr.size(); i++)
+        {
+            DesiredAttributes.push_back(attr[i]);
+            Coefficients.push_back(DesiredAttributes.size() - 1,CoE[i]);
+
+        }
+        for(int i = 0; i < Objectives.size(); i++)
+        {
+            TagObjectives.push_back(Objectives[i]);
+        }
+        TagReferenceTable.push_back(tl);
+    }
+
 #endif
 };
 #endif
